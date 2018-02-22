@@ -3,7 +3,7 @@ package tfconfig
 // Variable represents a single variable from a Terraform module.
 type Variable struct {
 	Name        string `json:"name"`
-	TypeHint    string `json:"type_hint"`
+	TypeHint    string `json:"type_hint,omitempty"`
 	Description string `json:"description,omitempty"`
 
 	// Default is an approximate representation of the default value in

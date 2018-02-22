@@ -28,6 +28,30 @@ func LoadModule(dir string) (*Module, Diagnostics) {
 			return legacyModule, legacyDiags
 		}
 	}
+
+	// Fill in any additional provider requirements that are implied by
+	// resource configurations, to avoid the caller from needing to apply
+	// this logic itself. Implied requirements don't have version constraints,
+	// but we'll make sure the requirement value is still non-nil in this
+	// case so callers can easily recognize it.
+	for _, r := range module.ManagedResources {
+		if _, exists := module.RequiredProviders[r.Provider.Name]; !exists {
+			module.RequiredProviders[r.Provider.Name] = []string{}
+		}
+	}
+	for _, r := range module.DataResources {
+		if _, exists := module.RequiredProviders[r.Provider.Name]; !exists {
+			module.RequiredProviders[r.Provider.Name] = []string{}
+		}
+	}
+	for _, m := range module.ModuleCalls {
+		for _, p := range m.Providers {
+			if _, exists := module.RequiredProviders[p.Name]; !exists {
+				module.RequiredProviders[p.Name] = []string{}
+			}
+		}
+	}
+
 	return module, diags
 }
 func dirFiles(dir string) (primary, override []string, diags hcl.Diagnostics) {

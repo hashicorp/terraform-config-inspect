@@ -1,7 +1,9 @@
 package tfconfig
 
 import (
+	"fmt"
 	"strconv"
+	"strings"
 )
 
 // Resource represents a single "resource" or "data" block within a module.
@@ -13,6 +15,20 @@ type Resource struct {
 	Provider ProviderRef `json:"provider"`
 
 	Pos SourcePos `json:"pos"`
+}
+
+// MapKey returns a string that can be used to uniquely identify the receiver
+// in a map[string]*Resource.
+func (r *Resource) MapKey() string {
+	switch r.Mode {
+	case ManagedResourceMode:
+		return fmt.Sprintf("%s.%s", r.Type, r.Name)
+	case DataResourceMode:
+		return fmt.Sprintf("data.%s.%s", r.Type, r.Name)
+	default:
+		// should never happen
+		return fmt.Sprintf("[invalid_mode!].%s.%s", r.Type, r.Name)
+	}
 }
 
 // ResourceMode represents the "mode" of a resource, which is used to
@@ -38,4 +54,11 @@ func (m ResourceMode) String() string {
 // MarshalJSON implements encoding/json.Marshaler.
 func (m ResourceMode) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.Quote(m.String())), nil
+}
+
+func resourceTypeDefaultProviderName(typeName string) string {
+	if underPos := strings.IndexByte(typeName, '_'); underPos != -1 {
+		return typeName[:underPos]
+	}
+	return typeName
 }
