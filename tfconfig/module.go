@@ -15,6 +15,11 @@ type Module struct {
 	ManagedResources map[string]*Resource   `json:"managed_resources"`
 	DataResources    map[string]*Resource   `json:"data_resources"`
 	ModuleCalls      map[string]*ModuleCall `json:"module_calls"`
+
+	// Diagnostics records any errors and warnings that were detected during
+	// loading, primarily for inclusion in serialized forms of the module
+	// since this slice is also returned as a second argument from LoadModule.
+	Diagnostics Diagnostics `json:"diagnostics,omitempty"`
 }
 
 func newModule(path string) *Module {

@@ -73,6 +73,18 @@ const DiagError DiagSeverity = 'E'
 // that did not prevent proper processing of the configuration.
 const DiagWarning DiagSeverity = 'W'
 
+// MarshalJSON is an implementation of encoding/json.Marshaler
+func (s DiagSeverity) MarshalJSON() ([]byte, error) {
+	switch s {
+	case DiagError:
+		return []byte(`"error"`), nil
+	case DiagWarning:
+		return []byte(`"warning"`), nil
+	default:
+		return []byte(`"invalid"`), nil
+	}
+}
+
 func diagnosticsHCL(diags hcl.Diagnostics) Diagnostics {
 	if len(diags) == 0 {
 		return nil

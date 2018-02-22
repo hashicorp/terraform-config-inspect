@@ -52,6 +52,11 @@ func LoadModule(dir string) (*Module, Diagnostics) {
 		}
 	}
 
+	// We redundantly also reference the diagnostics from inside the module
+	// object, primarily so that we can easily included in JSON-serialized
+	// versions of the module object.
+	module.Diagnostics = diags
+
 	return module, diags
 }
 func dirFiles(dir string) (primary, override []string, diags hcl.Diagnostics) {

@@ -1,10 +1,8 @@
 package tfconfig
 
 import (
-	"bufio"
 	"encoding/json"
 	"io/ioutil"
-	"os"
 	"path/filepath"
 	"testing"
 
@@ -36,24 +34,9 @@ func TestLoadModule(t *testing.T) {
 				t.Fatalf("failed to parse result file: %s", err)
 			}
 
-			wantDiags := map[string]struct{}{}
-			wantDiagsFile, err := os.Open(filepath.Join(path, name+".diags.txt"))
-			if err == nil {
-				sc := bufio.NewScanner(wantDiagsFile)
-				for sc.Scan() {
-					wantDiags[sc.Text()] = struct{}{}
-				}
-				wantDiagsFile.Close()
-			}
-
-			gotObj, gotDiagsObjs := LoadModule(path)
+			gotObj, _ := LoadModule(path)
 			if gotObj == nil {
 				t.Fatalf("result object is nil; want a real object")
-			}
-
-			gotDiags := map[string]struct{}{}
-			for _, diag := range gotDiagsObjs {
-				gotDiags[diag.Summary] = struct{}{}
 			}
 
 			gotSrc, err := json.Marshal(gotObj)
@@ -64,12 +47,6 @@ func TestLoadModule(t *testing.T) {
 			err = json.Unmarshal(gotSrc, &got)
 			if err != nil {
 				t.Fatalf("failed to parse the actual result (!?): %s", err)
-			}
-
-			if diff := deep.Equal(gotDiags, wantDiags); diff != nil {
-				for _, problem := range diff {
-					t.Errorf("mismatching diagnostic: %s", problem)
-				}
 			}
 
 			if diff := deep.Equal(got, want); diff != nil {

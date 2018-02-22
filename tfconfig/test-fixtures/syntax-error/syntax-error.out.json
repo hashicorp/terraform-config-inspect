@@ -8,5 +8,17 @@
 
     "managed_resources": {},
     "data_resources": {},
-    "module_calls": {}
+    "module_calls": {},
+
+    "diagnostics": [
+        {
+            "severity": "error",
+            "summary": "Attribute or block definition required",
+            "detail": "An attribute or block definition is required here.",
+            "pos": {
+                "filename": "test-fixtures/syntax-error/syntax-error.tf",
+                "line": 1
+            }
+        }
+    ]
 }
