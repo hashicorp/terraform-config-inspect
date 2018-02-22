@@ -164,21 +164,43 @@ func loadModule(dir string) (*Module, Diagnostics) {
 
 			case "provider":
 
-			case "resource":
+			case "resource", "data":
 
 				content, _, contentDiags := block.Body.PartialContent(resourceSchema)
 				diags = append(diags, contentDiags...)
 
 				typeName := block.Labels[0]
 				name := block.Labels[1]
+
 				r := &Resource{
-					Mode: ManagedResourceMode,
 					Type: typeName,
 					Name: name,
 					Pos:  sourcePosHCL(block.DefRange),
 				}
+
+				var resourcesMap map[string]*Resource
+
+				switch block.Type {
+				case "resource":
+					r.Mode = ManagedResourceMode
+					resourcesMap = mod.ManagedResources
+				case "data":
+					r.Mode = DataResourceMode
+					resourcesMap = mod.DataResources
+				}
+
 				key := r.MapKey()
-				mod.ManagedResources[key] = r
+				if _, exists := resourcesMap[key]; exists {
+					diags = append(diags, &hcl.Diagnostic{
+						Severity: hcl.DiagError,
+						Summary:  "Duplicate resource block",
+						Detail:   fmt.Sprintf("The resource %s was already defined.", key),
+						Subject:  &block.DefRange,
+					})
+					continue
+				}
+
+				resourcesMap[key] = r
 
 				if attr, defined := content.Attributes["provider"]; defined {
 					// New style here is to provide this as a naked traversal
@@ -229,8 +251,6 @@ func loadModule(dir string) (*Module, Diagnostics) {
 						Name: resourceTypeDefaultProviderName(r.Type),
 					}
 				}
-
-			case "data":
 
 			case "module":
 

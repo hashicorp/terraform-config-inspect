@@ -1,0 +1,40 @@
+{
+    "path": "test-fixtures/data-resources",
+
+    "required_providers": {
+        "external": [],
+        "notexternal": []
+    },
+
+    "variables": {},
+    "outputs": {},
+
+    "managed_resources": {},
+    "data_resources": {
+        "data.external.foo": {
+            "mode": "data",
+            "type": "external",
+            "name": "foo",
+            "provider": {
+                "name": "external"
+            },
+            "pos": {
+                "filename": "test-fixtures/data-resources/data-resources.tf",
+                "line": 1
+            }
+        },
+        "data.external.bar": {
+            "mode": "data",
+            "type": "external",
+            "name": "bar",
+            "provider": {
+                "name": "notexternal"
+            },
+            "pos": {
+                "filename": "test-fixtures/data-resources/data-resources.tf",
+                "line": 4
+            }
+        }
+    },
+    "module_calls": {}
+}
