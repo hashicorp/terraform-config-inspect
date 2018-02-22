@@ -166,7 +166,7 @@ func loadModule(dir string) (*Module, Diagnostics) {
 
 			case "resource":
 
-				content, _, contentDiags := block.Body.PartialContent(outputSchema)
+				content, _, contentDiags := block.Body.PartialContent(resourceSchema)
 				diags = append(diags, contentDiags...)
 
 				typeName := block.Labels[0]
@@ -202,7 +202,7 @@ func loadModule(dir string) (*Module, Diagnostics) {
 
 					// If we get out here with a nil traversal then we didn't
 					// succeed in processing the input.
-					if len(traversal) > 1 {
+					if len(traversal) > 0 {
 						providerName := traversal.RootName()
 						alias := ""
 						if len(traversal) > 1 {
