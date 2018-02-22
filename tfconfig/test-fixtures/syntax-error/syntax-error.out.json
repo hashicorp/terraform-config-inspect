@@ -1,0 +1,12 @@
+{
+    "path": "test-fixtures/syntax-error",
+
+    "required_providers": {},
+
+    "variables": {},
+    "outputs": {},
+
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {}
+}
