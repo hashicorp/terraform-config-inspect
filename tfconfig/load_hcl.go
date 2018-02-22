@@ -164,6 +164,26 @@ func loadModule(dir string) (*Module, Diagnostics) {
 
 			case "provider":
 
+				content, _, contentDiags := block.Body.PartialContent(providerConfigSchema)
+				diags = append(diags, contentDiags...)
+
+				name := block.Labels[0]
+
+				if attr, defined := content.Attributes["version"]; defined {
+					var version string
+					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
+					diags = append(diags, valDiags...)
+					if !valDiags.HasErrors() {
+						mod.RequiredProviders[name] = append(mod.RequiredProviders[name], version)
+					}
+				}
+
+				// Even if there wasn't an explicit version required, we still
+				// need an entry in our map to signal the unversioned dependency.
+				if _, exists := mod.RequiredProviders[name]; !exists {
+					mod.RequiredProviders[name] = []string{}
+				}
+
 			case "resource", "data":
 
 				content, _, contentDiags := block.Body.PartialContent(resourceSchema)
