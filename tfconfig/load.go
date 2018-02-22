@@ -44,13 +44,6 @@ func LoadModule(dir string) (*Module, Diagnostics) {
 			module.RequiredProviders[r.Provider.Name] = []string{}
 		}
 	}
-	for _, m := range module.ModuleCalls {
-		for _, p := range m.Providers {
-			if _, exists := module.RequiredProviders[p.Name]; !exists {
-				module.RequiredProviders[p.Name] = []string{}
-			}
-		}
-	}
 
 	// We redundantly also reference the diagnostics from inside the module
 	// object, primarily so that we can easily included in JSON-serialized

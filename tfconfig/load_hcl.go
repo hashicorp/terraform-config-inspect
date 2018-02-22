@@ -84,6 +84,17 @@ func loadModule(dir string) (*Module, Diagnostics) {
 					Name: name,
 					Pos:  sourcePosHCL(block.DefRange),
 				}
+
+				if _, exists := mod.Variables[name]; exists {
+					diags = append(diags, &hcl.Diagnostic{
+						Severity: hcl.DiagError,
+						Summary:  "Duplicate variable block",
+						Detail:   fmt.Sprintf("A variable named %q was already defined.", name),
+						Subject:  &block.DefRange,
+					})
+					continue
+				}
+
 				mod.Variables[name] = v
 
 				if attr, defined := content.Attributes["type"]; defined {
@@ -153,6 +164,17 @@ func loadModule(dir string) (*Module, Diagnostics) {
 					Name: name,
 					Pos:  sourcePosHCL(block.DefRange),
 				}
+
+				if _, exists := mod.Outputs[name]; exists {
+					diags = append(diags, &hcl.Diagnostic{
+						Severity: hcl.DiagError,
+						Summary:  "Duplicate output block",
+						Detail:   fmt.Sprintf("An output named %q was already defined.", name),
+						Subject:  &block.DefRange,
+					})
+					continue
+				}
+
 				mod.Outputs[name] = o
 
 				if attr, defined := content.Attributes["description"]; defined {
@@ -273,6 +295,41 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				}
 
 			case "module":
+
+				content, _, contentDiags := block.Body.PartialContent(moduleCallSchema)
+				diags = append(diags, contentDiags...)
+
+				name := block.Labels[0]
+				mc := &ModuleCall{
+					Name: block.Labels[0],
+					Pos:  sourcePosHCL(block.DefRange),
+				}
+
+				if _, exists := mod.ModuleCalls[name]; exists {
+					diags = append(diags, &hcl.Diagnostic{
+						Severity: hcl.DiagError,
+						Summary:  "Duplicate module block",
+						Detail:   fmt.Sprintf("An child module named %q was already defined.", name),
+						Subject:  &block.DefRange,
+					})
+					continue
+				}
+
+				mod.ModuleCalls[name] = mc
+
+				if attr, defined := content.Attributes["source"]; defined {
+					var source string
+					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &source)
+					diags = append(diags, valDiags...)
+					mc.Source = source
+				}
+
+				if attr, defined := content.Attributes["version"]; defined {
+					var version string
+					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
+					diags = append(diags, valDiags...)
+					mc.Version = version
+				}
 
 			default:
 				// Should never happen because our cases above should be

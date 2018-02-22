@@ -5,9 +5,7 @@ package tfconfig
 type ModuleCall struct {
 	Name    string `json:"name"`
 	Source  string `json:"source"`
-	Version string `json:"version"`
-
-	Providers []ProviderRef `json:"providers"`
+	Version string `json:"version,omitempty"`
 
 	Pos SourcePos `json:"pos"`
 }
