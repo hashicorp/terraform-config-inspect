@@ -1,0 +1,44 @@
+{
+    "path": "test-fixtures/variable-type-hints",
+
+    "required_providers": {},
+
+    "variables": {
+        "primitive": {
+            "name": "primitive",
+            "pos": {
+                "filename": "test-fixtures/variable-type-hints/hints.tf",
+                "line": 1
+            }
+        },
+        "list": {
+            "name": "list",
+            "type_hint": "list",
+            "pos": {
+                "filename": "test-fixtures/variable-type-hints/hints.tf",
+                "line": 4
+            }
+        },
+        "list_json": {
+            "name": "list_json",
+            "type_hint": "list",
+            "pos": {
+                "filename": "test-fixtures/variable-type-hints/hints.tf.json",
+                "line": 3
+            }
+        },
+        "map": {
+            "name": "map",
+            "type_hint": "map",
+            "pos": {
+                "filename": "test-fixtures/variable-type-hints/hints.tf",
+                "line": 8
+            }
+        }
+    },
+    "outputs": {},
+
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {}
+}
