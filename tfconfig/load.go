@@ -25,33 +25,38 @@ func LoadModule(dir string) (*Module, Diagnostics) {
 		// Try using the legacy HCL parser and see if we fare better.
 		legacyModule, legacyDiags := loadModuleLegacyHCL(dir)
 		if !legacyDiags.HasErrors() {
+			legacyModule.init(legacyDiags)
 			return legacyModule, legacyDiags
 		}
 	}
 
+	module.init(diags)
+	return module, diags
+}
+
+func (m *Module) init(diags Diagnostics) {
 	// Fill in any additional provider requirements that are implied by
 	// resource configurations, to avoid the caller from needing to apply
 	// this logic itself. Implied requirements don't have version constraints,
 	// but we'll make sure the requirement value is still non-nil in this
 	// case so callers can easily recognize it.
-	for _, r := range module.ManagedResources {
-		if _, exists := module.RequiredProviders[r.Provider.Name]; !exists {
-			module.RequiredProviders[r.Provider.Name] = []string{}
+	for _, r := range m.ManagedResources {
+		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
+			m.RequiredProviders[r.Provider.Name] = []string{}
 		}
 	}
-	for _, r := range module.DataResources {
-		if _, exists := module.RequiredProviders[r.Provider.Name]; !exists {
-			module.RequiredProviders[r.Provider.Name] = []string{}
+	for _, r := range m.DataResources {
+		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
+			m.RequiredProviders[r.Provider.Name] = []string{}
 		}
 	}
 
 	// We redundantly also reference the diagnostics from inside the module
 	// object, primarily so that we can easily included in JSON-serialized
 	// versions of the module object.
-	module.Diagnostics = diags
-
-	return module, diags
+	m.Diagnostics = diags
 }
+
 func dirFiles(dir string) (primary, override []string, diags hcl.Diagnostics) {
 	infos, err := ioutil.ReadDir(dir)
 	if err != nil {

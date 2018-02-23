@@ -339,5 +339,10 @@ func loadModule(dir string) (*Module, Diagnostics) {
 		}
 	}
 
+	if len(overridePaths) != 0 {
+		// TODO: Implement
+		panic("_override.tf and _override.tf.json files are not yet implemented")
+	}
+
 	return mod, diagnosticsHCL(diags)
 }

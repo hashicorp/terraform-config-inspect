@@ -115,7 +115,7 @@ func diagnosticsError(err error) Diagnostics {
 	}
 
 	if posErr, ok := err.(*legacyhclparser.PosError); ok {
-		pos := sourcePosLegacyHCL(posErr.Pos)
+		pos := sourcePosLegacyHCL(posErr.Pos, "")
 		return Diagnostics{
 			Diagnostic{
 				Severity: DiagError,
@@ -131,4 +131,8 @@ func diagnosticsError(err error) Diagnostics {
 			Summary:  err.Error(),
 		},
 	}
+}
+
+func diagnosticsErrorf(format string, args ...interface{}) Diagnostics {
+	return diagnosticsError(fmt.Errorf(format, args...))
 }
