@@ -1,0 +1,59 @@
+{
+    "path": "test-fixtures/type-conversions",
+
+    "required_core": ["true"],
+    "required_providers": {
+        "true": [],
+        "yep": ["true"],
+        "foo": ["true"]
+    },
+
+    "variables": {
+        "foo": {
+            "name": "foo",
+            "type_hint": "true",
+            "description": "true",
+            "pos": {
+                "filename": "test-fixtures/type-conversions/type-conversions.tf",
+                "line": 1
+            }
+        }
+    },
+    "outputs": {
+        "foo": {
+            "name": "foo",
+            "description": "true",
+            "pos": {
+                "filename": "test-fixtures/type-conversions/type-conversions.tf",
+                "line": 6
+            }
+        }
+    },
+
+    "managed_resources": {
+        "foo.foo": {
+            "mode": "managed",
+            "type": "foo",
+            "name": "foo",
+            "provider": {
+                "name": "true"
+            },
+            "pos": {
+                "filename": "test-fixtures/type-conversions/type-conversions.tf",
+                "line": 19
+            }
+        }
+    },
+    "data_resources": {},
+    "module_calls": {
+        "foo": {
+            "name": "foo",
+            "source": "true",
+            "version": "true",
+            "pos": {
+                "filename": "test-fixtures/type-conversions/type-conversions.tf",
+                "line": 10
+            }
+        }
+    }
+}
