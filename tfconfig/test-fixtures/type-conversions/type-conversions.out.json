@@ -11,7 +11,7 @@
     "variables": {
         "foo": {
             "name": "foo",
-            "type_hint": "true",
+            "type": "true",
             "description": "true",
             "pos": {
                 "filename": "test-fixtures/type-conversions/type-conversions.tf",

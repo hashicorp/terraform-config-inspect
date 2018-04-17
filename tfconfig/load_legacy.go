@@ -77,7 +77,7 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 		if vars := list.Filter("variable"); len(vars.Items) > 0 {
 			vars = vars.Children()
 			type VariableBlock struct {
-				TypeHint    string `hcl:"type"`
+				Type        string `hcl:"type"`
 				Default     interface{}
 				Description string
 				Fields      []string `hcl:",decodedFields"`
@@ -111,7 +111,7 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 
 				v := &Variable{
 					Name:        name,
-					TypeHint:    block.TypeHint,
+					Type:        block.Type,
 					Description: block.Description,
 					Default:     block.Default,
 					Pos:         sourcePosLegacyHCL(item.Pos(), filename),

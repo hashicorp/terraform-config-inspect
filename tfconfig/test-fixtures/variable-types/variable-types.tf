@@ -2,7 +2,7 @@ variable "primitive" {
 }
 
 variable "list" {
-  type = list
+  type = list(string)
 }
 
 variable "map" {

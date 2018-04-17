@@ -98,28 +98,44 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				mod.Variables[name] = v
 
 				if attr, defined := content.Attributes["type"]; defined {
-					typeHint := hcl.ExprAsKeyword(attr.Expr)
+					// We handle this particular attribute in a somewhat-tricky way:
+					// since Terraform may evolve its type expression syntax in
+					// future versions, we don't want to be overly-strict in how
+					// we handle it here, and so we'll instead just take the raw
+					// source provided by the user, using the source location
+					// information in the expression object.
+					//
+					// However, older versions of Terraform expected the type
+					// to be a string containing a keyword, so we'll need to
+					// handle that as a special case first for backward compatibility.
 
-					// Older configurations will have type as a quoted string,
-					// so we'll support that too as a fallback here.
-					if typeHint == "" {
-						var typeHintAsStr string
-						valDiags := gohcl.DecodeExpression(attr.Expr, nil, &typeHintAsStr)
-						if !valDiags.HasErrors() {
-							typeHint = typeHintAsStr
+					var typeExpr string
+
+					var typeExprAsStr string
+					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &typeExprAsStr)
+					if !valDiags.HasErrors() {
+						typeExpr = typeExprAsStr
+					} else {
+
+						rng := attr.Expr.Range()
+						sourceFilename := rng.Filename
+						source, exists := parser.Sources()[sourceFilename]
+						if exists {
+							typeExpr = string(rng.SliceBytes(source))
+						} else {
+							// This should never happen, so we'll just warn about it and leave the type unspecified.
+							diags = append(diags, &hcl.Diagnostic{
+								Severity: hcl.DiagError,
+								Summary:  "Source code not available",
+								Detail:   fmt.Sprintf("Source code is not available for the file %q, which declares the variable %q.", sourceFilename, name),
+								Subject:  &block.DefRange,
+							})
+							typeExpr = ""
 						}
+
 					}
 
-					if typeHint == "" {
-						diags = append(diags, &hcl.Diagnostic{
-							Severity: hcl.DiagError,
-							Summary:  "Invalid variable type hint",
-							Detail:   "The \"type\" argument must either be a type keyword or a quoted string.",
-							Subject:  attr.Expr.Range().Ptr(),
-						})
-					}
-
-					v.TypeHint = typeHint
+					v.Type = typeExpr
 				}
 
 				if attr, defined := content.Attributes["description"]; defined {

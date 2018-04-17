@@ -4,15 +4,6 @@
     "diagnostics": [
         {
             "severity": "error",
-            "summary": "Invalid variable type hint",
-            "detail": "The \"type\" argument must either be a type keyword or a quoted string.",
-            "pos": {
-                "filename": "test-fixtures/type-errors/type-errors.tf",
-                "line": 2
-            }
-        },
-        {
-            "severity": "error",
             "summary": "Unsuitable value type",
             "detail": "Unsuitable value: incorrect type; string required",
             "pos": {
@@ -93,6 +84,7 @@
     "variables": {
         "foo": {
             "name": "foo",
+            "type": "{\"what\":\"the\"}",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 1
