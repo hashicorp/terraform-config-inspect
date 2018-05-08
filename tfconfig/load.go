@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
-	"sort"
 	"strings"
 
 	"github.com/hashicorp/hcl2/hcl"
@@ -95,9 +94,6 @@ func dirFiles(dir string) (primary []string, diags hcl.Diagnostics) {
 
 	// We are assuming that any _override files will be logically named,
 	// and processing the files in alphabetical order. Primaries first, then overrides.
-	sort.Strings(primary)
-	sort.Strings(override)
-
 	primary = append(primary, override...)
 
 	return
