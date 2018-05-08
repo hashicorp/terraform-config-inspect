@@ -2,10 +2,18 @@ variable "A" {
   description = "The A variable OVERRIDDEN"
 }
 
-variable "B" {
-  description = "The B variable OVERRIDDEN"
-}
-
 variable "C" {
   description = "An entirely new variable C"
+}
+
+output "A" {
+  description = "I am an overridden output!"
+  value       = "${var.A}"
+}
+
+module "foo" {
+  source  = "foo/bar/baz"
+  version = "1.0.2_override"
+
+  unused = 2
 }

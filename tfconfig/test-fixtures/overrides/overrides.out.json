@@ -1,5 +1,5 @@
 {
-  "path": "test-fixtures/basics",
+  "path": "test-fixtures/overrides",
 
   "required_providers": {
     "null": []
@@ -8,9 +8,9 @@
   "variables": {
     "A": {
       "name": "A",
-      "default": "A default",
+      "description": "The A variable OVERRIDDEN",
       "pos": {
-        "filename": "test-fixtures/basics/basics.tf",
+        "filename": "test-fixtures/overrides/overrides_override.tf",
         "line": 1
       }
     },
@@ -18,7 +18,15 @@
       "name": "B",
       "description": "The B variable",
       "pos": {
-        "filename": "test-fixtures/basics/basics.tf",
+        "filename": "test-fixtures/overrides/overrides.tf",
+        "line": 5
+      }
+    },
+    "C": {
+      "name": "C",
+      "description": "An entirely new variable C",
+      "pos": {
+        "filename": "test-fixtures/overrides/overrides_override.tf",
         "line": 5
       }
     }
@@ -26,8 +34,9 @@
   "outputs": {
     "A": {
       "name": "A",
+      "description": "I am an overridden output!",
       "pos": {
-        "filename": "test-fixtures/basics/basics.tf",
+        "filename": "test-fixtures/overrides/overrides_override.tf",
         "line": 9
       }
     },
@@ -35,7 +44,7 @@
       "name": "B",
       "description": "I am B",
       "pos": {
-        "filename": "test-fixtures/basics/basics.tf",
+        "filename": "test-fixtures/overrides/overrides.tf",
         "line": 13
       }
     }
@@ -50,7 +59,7 @@
         "name": "null"
       },
       "pos": {
-        "filename": "test-fixtures/basics/basics.tf",
+        "filename": "test-fixtures/overrides/overrides.tf",
         "line": 18
       }
     },
@@ -62,11 +71,21 @@
         "name": "null"
       },
       "pos": {
-        "filename": "test-fixtures/basics/basics.tf",
+        "filename": "test-fixtures/overrides/overrides.tf",
         "line": 19
       }
     }
   },
   "data_resources": {},
-  "module_calls": {}
+  "module_calls": {
+    "foo": {
+      "name": "foo",
+      "source": "foo/bar/baz",
+      "version": "1.0.2_override",
+      "pos": {
+        "filename": "test-fixtures/overrides/overrides_override.tf",
+        "line": 14
+      }
+    }
+  }
 }

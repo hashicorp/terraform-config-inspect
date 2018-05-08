@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
-	"strings"
 	"sort"
+	"strings"
 
 	"github.com/hashicorp/hcl2/hcl"
 )

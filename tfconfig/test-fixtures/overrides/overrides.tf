@@ -17,3 +17,10 @@ output "B" {
 
 resource "null_resource" "A" {}
 resource "null_resource" "B" {}
+
+module "foo" {
+  source  = "foo/bar/baz"
+  version = "1.0.2"
+
+  unused = 2
+}
