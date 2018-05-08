@@ -57,7 +57,7 @@ func (m *Module) init(diags Diagnostics) {
 	m.Diagnostics = diags
 }
 
-func dirFiles(dir string) (primary, override []string, diags hcl.Diagnostics) {
+func dirFiles(dir string) (primary []string, diags hcl.Diagnostics) {
 	infos, err := ioutil.ReadDir(dir)
 	if err != nil {
 		diags = append(diags, &hcl.Diagnostic{
@@ -68,6 +68,7 @@ func dirFiles(dir string) (primary, override []string, diags hcl.Diagnostics) {
 		return
 	}
 
+	var override []string
 	for _, info := range infos {
 		if info.IsDir() {
 			// We only care about files
@@ -90,6 +91,10 @@ func dirFiles(dir string) (primary, override []string, diags hcl.Diagnostics) {
 			primary = append(primary, fullPath)
 		}
 	}
+
+	// We are assuming that any _override files will be logically named,
+	// and processing the files in alphabetical order. Primaries first, then overrides.
+	primary = append(primary, override...)
 
 	return
 }

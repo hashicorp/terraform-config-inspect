@@ -18,12 +18,12 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 	// an error, and thus the errors here are not seen by the end-caller.
 	mod := newModule(dir)
 
-	primaryPaths, overridePaths, diags := dirFiles(dir)
+	primaryPaths, diags := dirFiles(dir)
 	if diags.HasErrors() {
 		return mod, diagnosticsHCL(diags)
 	}
 
-	if len(primaryPaths) == 0 && len(overridePaths) == 0 {
+	if len(primaryPaths) == 0 {
 		var diags hcl.Diagnostics
 		diags = append(diags, &hcl.Diagnostic{
 			Severity: hcl.DiagError,
@@ -289,11 +289,6 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 
 			}
 		}
-	}
-
-	if len(overridePaths) != 0 {
-		// TODO: Implement
-		panic("_override.tf and _override.tf.json files are not yet implemented")
 	}
 
 	return mod, nil
