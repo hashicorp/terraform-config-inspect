@@ -15,11 +15,11 @@ import (
 
 func loadModule(dir string) (*Module, Diagnostics) {
 	mod := newModule(dir)
-	primaryPaths, overridePaths, diags := dirFiles(dir)
+	primaryPaths, diags := dirFiles(dir)
 
 	parser := hclparse.NewParser()
 
-	if len(primaryPaths) == 0 && len(overridePaths) == 0 {
+	if len(primaryPaths) == 0 {
 		diags = append(diags, &hcl.Diagnostic{
 			Severity: hcl.DiagError,
 			Summary:  "No Terraform configuration files",
@@ -83,16 +83,6 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				v := &Variable{
 					Name: name,
 					Pos:  sourcePosHCL(block.DefRange),
-				}
-
-				if _, exists := mod.Variables[name]; exists {
-					diags = append(diags, &hcl.Diagnostic{
-						Severity: hcl.DiagError,
-						Summary:  "Duplicate variable block",
-						Detail:   fmt.Sprintf("A variable named %q was already defined.", name),
-						Subject:  &block.DefRange,
-					})
-					continue
 				}
 
 				mod.Variables[name] = v
@@ -181,16 +171,6 @@ func loadModule(dir string) (*Module, Diagnostics) {
 					Pos:  sourcePosHCL(block.DefRange),
 				}
 
-				if _, exists := mod.Outputs[name]; exists {
-					diags = append(diags, &hcl.Diagnostic{
-						Severity: hcl.DiagError,
-						Summary:  "Duplicate output block",
-						Detail:   fmt.Sprintf("An output named %q was already defined.", name),
-						Subject:  &block.DefRange,
-					})
-					continue
-				}
-
 				mod.Outputs[name] = o
 
 				if attr, defined := content.Attributes["description"]; defined {
@@ -248,15 +228,6 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				}
 
 				key := r.MapKey()
-				if _, exists := resourcesMap[key]; exists {
-					diags = append(diags, &hcl.Diagnostic{
-						Severity: hcl.DiagError,
-						Summary:  "Duplicate resource block",
-						Detail:   fmt.Sprintf("The resource %s was already defined.", key),
-						Subject:  &block.DefRange,
-					})
-					continue
-				}
 
 				resourcesMap[key] = r
 
@@ -321,16 +292,6 @@ func loadModule(dir string) (*Module, Diagnostics) {
 					Pos:  sourcePosHCL(block.DefRange),
 				}
 
-				if _, exists := mod.ModuleCalls[name]; exists {
-					diags = append(diags, &hcl.Diagnostic{
-						Severity: hcl.DiagError,
-						Summary:  "Duplicate module block",
-						Detail:   fmt.Sprintf("An child module named %q was already defined.", name),
-						Subject:  &block.DefRange,
-					})
-					continue
-				}
-
 				mod.ModuleCalls[name] = mc
 
 				if attr, defined := content.Attributes["source"]; defined {
@@ -353,11 +314,6 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				panic(fmt.Errorf("unhandled block type %q", block.Type))
 			}
 		}
-	}
-
-	if len(overridePaths) != 0 {
-		// TODO: Implement
-		panic("_override.tf and _override.tf.json files are not yet implemented")
 	}
 
 	return mod, diagnosticsHCL(diags)
