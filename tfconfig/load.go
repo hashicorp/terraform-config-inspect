@@ -34,8 +34,8 @@ func LoadModule(dir string) (*Module, Diagnostics) {
 	return module, diags
 }
 
-// IsModuleDir checks if the given path contains terraform configuration files
-// This allows the caller to decide how to handle directories that do not have tf files
+// IsModuleDir checks if the given path contains terraform configuration files.
+// This allows the caller to decide how to handle directories that do not have tf files.
 func IsModuleDir(dir string) bool {
 	primaryPaths, _ := dirFiles(dir)
 	if len(primaryPaths) == 0 {
