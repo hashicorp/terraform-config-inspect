@@ -19,14 +19,6 @@ func loadModule(dir string) (*Module, Diagnostics) {
 
 	parser := hclparse.NewParser()
 
-	if len(primaryPaths) == 0 {
-		diags = append(diags, &hcl.Diagnostic{
-			Severity: hcl.DiagError,
-			Summary:  "No Terraform configuration files",
-			Detail:   fmt.Sprintf("Module directory %s does not contain any .tf or .tf.json files.", dir),
-		})
-	}
-
 	for _, filename := range primaryPaths {
 		var file *hcl.File
 		var fileDiags hcl.Diagnostics
