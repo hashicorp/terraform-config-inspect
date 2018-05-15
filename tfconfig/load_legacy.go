@@ -1,13 +1,11 @@
 package tfconfig
 
 import (
-	"fmt"
 	"io/ioutil"
 	"strings"
 
 	legacyhcl "github.com/hashicorp/hcl"
 	legacyast "github.com/hashicorp/hcl/hcl/ast"
-	"github.com/hashicorp/hcl2/hcl"
 )
 
 func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
@@ -20,16 +18,6 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 
 	primaryPaths, diags := dirFiles(dir)
 	if diags.HasErrors() {
-		return mod, diagnosticsHCL(diags)
-	}
-
-	if len(primaryPaths) == 0 {
-		var diags hcl.Diagnostics
-		diags = append(diags, &hcl.Diagnostic{
-			Severity: hcl.DiagError,
-			Summary:  "No Terraform configuration files",
-			Detail:   fmt.Sprintf("Module directory %s does not contain any .tf or .tf.json files.", dir),
-		})
 		return mod, diagnosticsHCL(diags)
 	}
 
