@@ -28,7 +28,7 @@ and 0.12.
 ## Command Line Tool
 
 The primary way to use this repository is as a Go library, but as a convenience
-it also contains a CLI tool called `terraform-config-expect`, installed
+it also contains a CLI tool called `terraform-config-inspect`, installed
 automatically by the `go get` command above, that allows viewing module
 information in either a Markdown-like format or in JSON format.
 
