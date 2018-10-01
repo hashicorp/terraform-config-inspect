@@ -1,0 +1,18 @@
+{
+    "path": "test-fixtures/invalid-braces",
+    "variables": {
+        "foo": {
+            "name": "foo",
+            "default": "123",
+            "pos": {
+                "filename": "test-fixtures/invalid-braces/invalid-braces.tf",
+                "line": 5
+            }
+        }
+    },
+    "outputs": {},
+    "required_providers": {},
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {}
+}
