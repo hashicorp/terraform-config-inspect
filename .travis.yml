@@ -1,0 +1,26 @@
+language: go
+go:
+  - 1.11.x
+  - master
+
+os:
+  - linux
+
+dist: trusty
+sudo: false
+
+matrix:
+  fast_finish: true
+  allow_failures:
+  - go: master
+
+cache:
+  directories:
+    - $HOME/.cache/go-build
+    - $HOME/gopath/pkg/mod
+
+install: true
+
+script:
+  - env GO111MODULE=on go test ./...
+  - env GO111MODULE=on go install .
