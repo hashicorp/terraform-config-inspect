@@ -5,7 +5,7 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: incorrect type; string required",
+            "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 3
@@ -14,7 +14,7 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: incorrect type; string required",
+            "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 7
@@ -23,7 +23,7 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: incorrect type; string required",
+            "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 11
@@ -32,7 +32,7 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: incorrect type; string required",
+            "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 12
@@ -41,7 +41,7 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: incorrect type; string required",
+            "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 16
@@ -59,7 +59,7 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: incorrect type; string required",
+            "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 24
@@ -68,7 +68,7 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: incorrect type; string required",
+            "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "test-fixtures/type-errors/type-errors.tf",
                 "line": 26
