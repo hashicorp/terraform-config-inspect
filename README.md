@@ -125,3 +125,22 @@ $ terraform-config-inspect --json path/to/module
   "module_calls": {}
 }
 ```
+
+## Contributing
+
+This library and tool are intentionally focused on only extracting simple
+top-level metadata about a single Terraform module. This is to reduce the
+maintenence burden of keeping this codebase synchronized with changes to
+Terraform itself: the features extracted by this package are unlikely to change
+significantly in future versions.
+
+For that reason, **we cannot accept external PRs for this codebase that add support for additional Terraform language features**.
+
+We would be happy to review PRs to fix bugs in existing functionality or to
+improve the usability of the Go package API, however. We will be hesitant about
+any breaking changes to the API, since this library is used by a number of
+existing tools and systems.
+
+To work on this codebase you will need a recent version of Go installed. Please
+ensure all files match the formatting rules applied by `go fmt` and that all
+unit tests are passing.
