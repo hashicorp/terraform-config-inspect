@@ -130,7 +130,7 @@ $ terraform-config-inspect --json path/to/module
 
 This library and tool are intentionally focused on only extracting simple
 top-level metadata about a single Terraform module. This is to reduce the
-maintenence burden of keeping this codebase synchronized with changes to
+maintenance burden of keeping this codebase synchronized with changes to
 Terraform itself: the features extracted by this package are unlikely to change
 significantly in future versions.
 
