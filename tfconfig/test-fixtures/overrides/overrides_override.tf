@@ -12,7 +12,6 @@ output "A" {
 }
 
 module "foo" {
-  source  = "foo/bar/baz"
   version = "1.0.2_override"
 
   unused = 2
