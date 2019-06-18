@@ -3,6 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
 	"os"
 	"strings"
 	"text/template"
@@ -12,6 +14,7 @@ import (
 )
 
 var showJSON = flag.Bool("json", false, "produce JSON-formatted output")
+var templateFile = flag.StringP("template", "t", "", "path to a file containing a template to render")
 
 func main() {
 	flag.Parse()
@@ -28,7 +31,17 @@ func main() {
 	if *showJSON {
 		showModuleJSON(module)
 	} else {
-		showModuleMarkdown(module)
+		var markdownTemplate = defaultMarkdownTemplate
+
+		if len(*templateFile) > 0 {
+			rawTemplate, err := ioutil.ReadFile(*templateFile)
+			if err != nil {
+				log.Fatal(err)
+			}
+			markdownTemplate = string(rawTemplate)
+		}
+
+		showModuleMarkdown(module, markdownTemplate)
 	}
 
 	if module.Diagnostics.HasErrors() {
@@ -46,7 +59,7 @@ func showModuleJSON(module *tfconfig.Module) {
 	os.Stdout.Write([]byte{'\n'})
 }
 
-func showModuleMarkdown(module *tfconfig.Module) {
+func showModuleMarkdown(module *tfconfig.Module, markdownTemplate string) {
 	tmpl := template.New("md")
 	tmpl.Funcs(template.FuncMap{
 		"tt": func(s string) string {
@@ -78,7 +91,7 @@ func showModuleMarkdown(module *tfconfig.Module) {
 	}
 }
 
-const markdownTemplate = `
+const defaultMarkdownTemplate = `
 # Module {{ tt .Path }}
 
 {{- if .RequiredCore}}
