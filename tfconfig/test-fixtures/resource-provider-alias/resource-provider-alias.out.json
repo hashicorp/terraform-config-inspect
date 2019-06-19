@@ -5,6 +5,11 @@
         "aws": [],
         "notaws": []
     },
+    "defined_providers": [
+        {"name": "aws"},
+        {"name": "aws", "alias": "aliased"},
+        {"name": "notaws"}
+    ],
 
     "variables": {},
     "outputs": {},

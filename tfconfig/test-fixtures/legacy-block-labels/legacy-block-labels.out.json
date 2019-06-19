@@ -8,6 +8,12 @@
         "external": [],
         "noversion": []
     },
+    "defined_providers": [
+        {"name": "aws"},
+        {"name": "external"},
+        {"name": "notnull", "alias": "baz"},
+        {"name": "noversion"}
+    ],
 
     "variables": {
         "foo": {

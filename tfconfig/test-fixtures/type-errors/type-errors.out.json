@@ -80,6 +80,10 @@
         "foo": [],
         "": []
     },
+    "defined_providers": [
+        {"name": ""},
+        {"name": "foo"}
+    ],
 
     "variables": {
         "foo": {

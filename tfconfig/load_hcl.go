@@ -194,6 +194,23 @@ func loadModule(dir string) (*Module, Diagnostics) {
 					mod.RequiredProviders[name] = []string{}
 				}
 
+				if attr, defined := content.Attributes["alias"]; defined {
+					var alias string
+					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &alias)
+					diags = append(diags, valDiags...)
+					if !valDiags.HasErrors() {
+						mod.DefinedProviders = append(mod.DefinedProviders, &ProviderRef{
+							Name:  name,
+							Alias: alias,
+						})
+					}
+				} else {
+					mod.DefinedProviders = append(mod.DefinedProviders, &ProviderRef{
+						Name:  name,
+						Alias: "",
+					})
+				}
+
 			case "resource", "data":
 
 				content, _, contentDiags := block.Body.PartialContent(resourceSchema)

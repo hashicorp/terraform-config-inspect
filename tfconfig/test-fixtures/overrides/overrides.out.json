@@ -4,6 +4,9 @@
   "required_providers": {
     "null": []
   },
+  "defined_providers": [
+    {"name": "null"}
+  ],
 
   "variables": {
     "A": {

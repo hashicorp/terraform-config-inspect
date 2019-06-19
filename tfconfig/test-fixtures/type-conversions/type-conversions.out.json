@@ -7,6 +7,10 @@
         "yep": ["true"],
         "foo": ["true"]
     },
+    "defined_providers": [
+        {"name": "foo"},
+        {"name": "true"}
+    ],
 
     "variables": {
         "foo": {

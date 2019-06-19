@@ -251,6 +251,7 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 			providerConfigs = providerConfigs.Children()
 			type ProviderBlock struct {
 				Version string
+				Alias   string
 			}
 
 			for _, item := range providerConfigs.Items {
@@ -271,6 +272,11 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 				if block.Version != "" {
 					mod.RequiredProviders[name] = append(mod.RequiredProviders[name], block.Version)
 				}
+
+				mod.DefinedProviders = append(mod.DefinedProviders, &ProviderRef{
+					Name:  name,
+					Alias: block.Alias,
+				})
 
 				// Even if there wasn't an explicit version required, we still
 				// need an entry in our map to signal the unversioned dependency.

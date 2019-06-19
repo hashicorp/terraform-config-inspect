@@ -5,6 +5,10 @@
         "external": [],
         "notexternal": []
     },
+    "defined_providers": [
+        {"name": "external"},
+        {"name": "notexternal"}
+    ],
 
     "variables": {},
     "outputs": {},

@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"path/filepath"
+	"sort"
 	"strings"
 
 	"github.com/hashicorp/hcl2/hcl"
@@ -44,6 +45,15 @@ func IsModuleDir(dir string) bool {
 	return true
 }
 
+func contains(providers []*ProviderRef, provider ProviderRef) bool {
+	for _, existing := range providers {
+		if provider == *existing {
+			return true
+		}
+	}
+	return false
+}
+
 func (m *Module) init(diags Diagnostics) {
 	// Fill in any additional provider requirements that are implied by
 	// resource configurations, to avoid the caller from needing to apply
@@ -54,12 +64,20 @@ func (m *Module) init(diags Diagnostics) {
 		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
 			m.RequiredProviders[r.Provider.Name] = []string{}
 		}
+		if !contains(m.DefinedProviders, r.Provider) {
+			m.DefinedProviders = append(m.DefinedProviders, &r.Provider)
+		}
 	}
 	for _, r := range m.DataResources {
 		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
 			m.RequiredProviders[r.Provider.Name] = []string{}
 		}
+		if !contains(m.DefinedProviders, r.Provider) {
+			m.DefinedProviders = append(m.DefinedProviders, &r.Provider)
+		}
 	}
+
+	sort.Sort(providersSortedByName(m.DefinedProviders))
 
 	// We redundantly also reference the diagnostics from inside the module
 	// object, primarily so that we can easily included in JSON-serialized

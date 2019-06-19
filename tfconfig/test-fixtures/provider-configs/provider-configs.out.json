@@ -6,6 +6,11 @@
         "bar": ["1.0.0", "1.1.0"],
         "baz": ["2.0.0"]
     },
+    "defined_providers": [
+        {"name": "bar"},
+        {"name": "bar", "alias": "fizzbuzz"},
+        {"name": "foo"}
+    ],
 
     "variables": {},
     "outputs": {},
@@ -20,7 +25,7 @@
             },
             "pos": {
                 "filename": "test-fixtures/provider-configs/provider-configs.tf",
-                "line": 10
+                "line": 14
             }
         }
     },
