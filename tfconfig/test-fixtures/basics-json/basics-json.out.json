@@ -4,7 +4,7 @@
   "required_providers": {
     "null": []
   },
-  "defined_providers": [
+  "implicit_providers": [
     {"name":  "null"}
   ],
 

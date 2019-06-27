@@ -8,7 +8,9 @@
         "foo": ["true"]
     },
     "defined_providers": [
-        {"name": "foo"},
+        {"name": "foo"}
+    ],
+    "implicit_providers": [
         {"name": "true"}
     ],
 

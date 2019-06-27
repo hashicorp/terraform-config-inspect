@@ -81,8 +81,10 @@
         "": []
     },
     "defined_providers": [
-        {"name": ""},
         {"name": "foo"}
+    ],
+    "implicit_providers": [
+        {"name": ""}
     ],
 
     "variables": {

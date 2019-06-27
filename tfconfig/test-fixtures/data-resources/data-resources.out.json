@@ -5,7 +5,7 @@
         "external": [],
         "notexternal": []
     },
-    "defined_providers": [
+    "implicit_providers": [
         {"name": "external"},
         {"name": "notexternal"}
     ],

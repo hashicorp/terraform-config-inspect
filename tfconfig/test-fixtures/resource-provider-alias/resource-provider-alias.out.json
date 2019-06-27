@@ -5,7 +5,7 @@
         "aws": [],
         "notaws": []
     },
-    "defined_providers": [
+    "implicit_providers": [
         {"name": "aws"},
         {"name": "aws", "alias": "aliased"},
         {"name": "notaws"}

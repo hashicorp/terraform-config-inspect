@@ -10,9 +10,11 @@
     },
     "defined_providers": [
         {"name": "aws"},
-        {"name": "external"},
-        {"name": "notnull", "alias": "baz"},
         {"name": "noversion"}
+    ],
+    "implicit_providers": [
+        {"name": "external"},
+        {"name": "notnull", "alias": "baz"}
     ],
 
     "variables": {
