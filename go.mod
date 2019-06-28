@@ -10,5 +10,5 @@ require (
 	github.com/mitchellh/go-wordwrap v1.0.0 // indirect
 	github.com/spf13/pflag v1.0.3
 	github.com/stretchr/testify v1.3.0 // indirect
-	github.com/zclconf/go-cty v0.0.0-20190516203816-4fecf87372ec
+	github.com/zclconf/go-cty v1.0.0
 )
