@@ -45,15 +45,6 @@ func IsModuleDir(dir string) bool {
 	return true
 }
 
-func contains(providers []*ProviderRef, provider ProviderRef) bool {
-	for _, existing := range providers {
-		if *existing == provider {
-			return true
-		}
-	}
-	return false
-}
-
 func (m *Module) init(diags Diagnostics) {
 	// Fill in any additional provider requirements that are implied by
 	// resource configurations, to avoid the caller from needing to apply
@@ -64,7 +55,7 @@ func (m *Module) init(diags Diagnostics) {
 		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
 			m.RequiredProviders[r.Provider.Name] = []string{}
 		}
-		if !contains(m.DefinedProviders, r.Provider) && !contains(m.ImplicitProviders, r.Provider) {
+		if !m.DefinedProviders.contains(r.Provider) && !m.ImplicitProviders.contains(r.Provider) {
 			m.ImplicitProviders = append(m.ImplicitProviders, &r.Provider)
 		}
 	}
@@ -72,13 +63,13 @@ func (m *Module) init(diags Diagnostics) {
 		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
 			m.RequiredProviders[r.Provider.Name] = []string{}
 		}
-		if !contains(m.DefinedProviders, r.Provider) && !contains(m.ImplicitProviders, r.Provider) {
+		if !m.DefinedProviders.contains(r.Provider) && !m.ImplicitProviders.contains(r.Provider) {
 			m.ImplicitProviders = append(m.ImplicitProviders, &r.Provider)
 		}
 	}
 
-	sort.Sort(providersSortedByName(m.DefinedProviders))
-	sort.Sort(providersSortedByName(m.ImplicitProviders))
+	sort.Sort(m.DefinedProviders)
+	sort.Sort(m.ImplicitProviders)
 
 	// We redundantly also reference the diagnostics from inside the module
 	// object, primarily so that we can easily included in JSON-serialized

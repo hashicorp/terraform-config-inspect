@@ -8,16 +8,25 @@ type ProviderRef struct {
 	Alias string `json:"alias,omitempty"` // Empty if the default provider configuration is referenced
 }
 
-type providersSortedByName []*ProviderRef
+type providerRefs []*ProviderRef
 
-func (a providersSortedByName) Len() int {
+func (a providerRefs) Len() int {
 	return len(a)
 }
 
-func (a providersSortedByName) Swap(i, j int) {
+func (a providerRefs) Swap(i, j int) {
 	a[i], a[j] = a[j], a[i]
 }
 
-func (a providersSortedByName) Less(i, j int) bool {
+func (a providerRefs) Less(i, j int) bool {
 	return a[i].Name < a[j].Name || (a[i].Name == a[j].Name && a[i].Alias < a[j].Alias)
+}
+
+func (a providerRefs) contains(provider ProviderRef) bool {
+	for _, existing := range a {
+		if *existing == provider {
+			return true
+		}
+	}
+	return false
 }

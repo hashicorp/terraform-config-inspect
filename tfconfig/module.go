@@ -11,8 +11,8 @@ type Module struct {
 
 	RequiredCore      []string            `json:"required_core,omitempty"`
 	RequiredProviders map[string][]string `json:"required_providers"`
-	DefinedProviders  []*ProviderRef      `json:"defined_providers,omitempty"`
-	ImplicitProviders []*ProviderRef      `json:"implicit_providers,omitempty"`
+	DefinedProviders  providerRefs        `json:"defined_providers,omitempty"`
+	ImplicitProviders providerRefs        `json:"implicit_providers,omitempty"`
 
 	ManagedResources map[string]*Resource   `json:"managed_resources"`
 	DataResources    map[string]*Resource   `json:"data_resources"`
