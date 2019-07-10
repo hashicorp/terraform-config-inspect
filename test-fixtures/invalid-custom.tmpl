@@ -1,0 +1,8 @@
+Module {{ tt .Path }}
+=====================
+
+{{- if .RequiredCore}}
+
+Core Version Constraints:
+{{- range .RequiredCore }}
+* {{ tt . }}

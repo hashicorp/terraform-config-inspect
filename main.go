@@ -3,8 +3,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"strings"
 	"text/template"
@@ -14,7 +14,7 @@ import (
 )
 
 var showJSON = flag.Bool("json", false, "produce JSON-formatted output")
-var templateFile = flag.StringP("template", "t", "", "path to a file containing a template to render")
+var templateFile = flag.StringP("template-file", "t", "", "path to a file containing a template to render")
 
 func main() {
 	flag.Parse()
@@ -36,12 +36,17 @@ func main() {
 		if len(*templateFile) > 0 {
 			rawTemplate, err := ioutil.ReadFile(*templateFile)
 			if err != nil {
-				log.Fatal(err)
+				fmt.Fprintf(os.Stderr, "error reading template file: %s\n", err)
+				os.Exit(2)
 			}
 			markdownTemplate = string(rawTemplate)
 		}
 
-		showModuleMarkdown(module, markdownTemplate)
+		err := showModuleMarkdown(module, markdownTemplate, os.Stdout)
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "error rendering template: %s\n", err)
+			os.Exit(2)
+		}
 	}
 
 	if module.Diagnostics.HasErrors() {
@@ -59,7 +64,7 @@ func showModuleJSON(module *tfconfig.Module) {
 	os.Stdout.Write([]byte{'\n'})
 }
 
-func showModuleMarkdown(module *tfconfig.Module, markdownTemplate string) {
+func showModuleMarkdown(module *tfconfig.Module, markdownTemplate string, w io.Writer) error {
 	tmpl := template.New("md")
 	tmpl.Funcs(template.FuncMap{
 		"tt": func(s string) string {
@@ -83,12 +88,15 @@ func showModuleMarkdown(module *tfconfig.Module, markdownTemplate string) {
 			}
 		},
 	})
-	template.Must(tmpl.Parse(markdownTemplate))
-	err := tmpl.Execute(os.Stdout, module)
+	_, err := tmpl.Parse(markdownTemplate)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "error rendering template: %s\n", err)
-		os.Exit(2)
+		return err
 	}
+	err = tmpl.Execute(w, module)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 const defaultMarkdownTemplate = `
