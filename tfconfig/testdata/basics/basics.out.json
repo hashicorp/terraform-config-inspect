@@ -7,6 +7,7 @@
     "A": {
       "name": "A",
       "default": "A default",
+      "required": false,
       "pos": {
         "filename": "testdata/basics/basics.tf",
         "line": 1
@@ -15,6 +16,8 @@
     "B": {
       "name": "B",
       "description": "The B variable",
+      "default": null,
+      "required": true,
       "pos": {
         "filename": "testdata/basics/basics.tf",
         "line": 5

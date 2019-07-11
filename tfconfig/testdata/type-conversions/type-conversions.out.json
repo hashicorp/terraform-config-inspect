@@ -21,6 +21,8 @@
             "name": "foo",
             "type": "true",
             "description": "true",
+            "default": null,
+            "required": true,
             "pos": {
                 "filename": "testdata/type-conversions/type-conversions.tf",
                 "line": 1

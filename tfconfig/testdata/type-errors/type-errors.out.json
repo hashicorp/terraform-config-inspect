@@ -82,6 +82,8 @@
         "foo": {
             "name": "foo",
             "type": "{\"what\":\"the\"}",
+            "default": null,
+            "required": true,
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
                 "line": 1

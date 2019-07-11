@@ -18,6 +18,7 @@
             "name": "foo",
             "description": "foo description",
             "default": "foo default",
+            "required": false,
             "pos": {
                 "filename": "testdata/legacy-block-labels/legacy-block-labels.tf",
                 "line": 29
