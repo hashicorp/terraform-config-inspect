@@ -7,7 +7,7 @@ import (
 	"strings"
 	"text/template"
 
-	"github.com/hashicorp/terraform-config-inspect/tfconfig"
+	"github.com/burck1/terraform-config-inspect/tfconfig"
 	flag "github.com/spf13/pflag"
 )
 

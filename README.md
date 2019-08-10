@@ -144,3 +144,34 @@ existing tools and systems.
 To work on this codebase you will need a recent version of Go installed. Please
 ensure all files match the formatting rules applied by `go fmt` and that all
 unit tests are passing.
+
+### Build and Run
+
+```
+env GO111MODULE=on go build -o terraform-config-inspect
+./terraform-config-inspect
+```
+
+### Test
+
+```
+env GO111MODULE=on go test ./...
+```
+
+### Install
+
+```
+env GO111MODULE=on go install .
+```
+
+### Upgrade Dependencies
+
+```
+env GO111MODULE=on go get -u
+```
+
+### Prune Dependencies
+
+```
+env GO111MODULE=on go mod tidy
+```
