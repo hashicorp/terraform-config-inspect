@@ -179,11 +179,11 @@ make install
 ### Upgrade Dependencies
 
 ```
-env GO111MODULE=on go get -u
+make upgrade
 ```
 
 ### Prune Dependencies
 
 ```
-env GO111MODULE=on go mod tidy
+make prune
 ```
