@@ -145,23 +145,35 @@ To work on this codebase you will need a recent version of Go installed. Please
 ensure all files match the formatting rules applied by `go fmt` and that all
 unit tests are passing.
 
-### Build and Run
+### Build
 
 ```
-env GO111MODULE=on go build -o terraform-config-inspect
-./terraform-config-inspect
+make build
 ```
 
 ### Test
 
 ```
-env GO111MODULE=on go test ./...
+make test
+```
+
+### Build and Run
+
+```
+make run # defaults to running with ./tfconfig/test-fixtures/basics
+make run DIR=./tfconfig/test-fixtures/empty
+```
+
+### Test
+
+```
+make clean
 ```
 
 ### Install
 
 ```
-env GO111MODULE=on go install .
+make install
 ```
 
 ### Upgrade Dependencies
