@@ -1,0 +1,39 @@
+{
+  "path": "./tfconfig/test-fixtures/backend",
+  "required_core": [
+    ">= 0.11.0"
+  ],
+  "backend_type": "s3",
+  "backend_configuration": {
+    "bucket": "mybucket",
+    "key": "path/to/my/key",
+    "region": "us-east-1"
+  },
+  "required_providers": {
+    "aws": [
+      ">= 2.7.0"
+    ]
+  },
+  "variables": {
+    "foo": {
+      "name": "foo",
+      "default": "bar",
+      "pos": {
+        "filename": "tfconfig/test-fixtures/backend/backend.tf",
+        "line": 21
+      }
+    }
+  },
+  "outputs": {
+    "foo": {
+      "name": "foo",
+      "pos": {
+        "filename": "tfconfig/test-fixtures/backend/backend.tf",
+        "line": 25
+      }
+    }
+  },
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}

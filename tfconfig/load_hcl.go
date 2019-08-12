@@ -52,17 +52,32 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				}
 
 				for _, block := range content.Blocks {
-					// Our schema only allows required_providers here, so we
-					// assume that we'll only get that block type.
-					attrs, attrDiags := block.Body.JustAttributes()
-					diags = append(diags, attrDiags...)
+					switch block.Type {
+					case "required_providers":
+						attrs, attrDiags := block.Body.JustAttributes()
+						diags = append(diags, attrDiags...)
 
-					for name, attr := range attrs {
-						var version string
-						valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
-						diags = append(diags, valDiags...)
-						if !valDiags.HasErrors() {
-							mod.RequiredProviders[name] = append(mod.RequiredProviders[name], version)
+						for name, attr := range attrs {
+							var version string
+							valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
+							diags = append(diags, valDiags...)
+							if !valDiags.HasErrors() {
+								mod.RequiredProviders[name] = append(mod.RequiredProviders[name], version)
+							}
+						}
+					case "backend":
+						mod.BackendType = block.Labels[0]
+
+						attrs, attrDiags := block.Body.JustAttributes()
+						diags = append(diags, attrDiags...)
+
+						for configKey, attr := range attrs {
+							var configValue string
+							valDiags := gohcl.DecodeExpression(attr.Expr, nil, &configValue)
+							diags = append(diags, valDiags...)
+							if !valDiags.HasErrors() {
+								mod.BackendConfiguration[configKey] = configValue
+							}
 						}
 					}
 				}
