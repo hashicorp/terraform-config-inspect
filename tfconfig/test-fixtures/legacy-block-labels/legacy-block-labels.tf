@@ -9,12 +9,7 @@
 
 terraform {
   required_version = ">= 0.11.0"
-
-  backend "s3" {
-    # This is ignored but included to make sure we do ignore it successfully
-    foo = "bar"
-  }
-  ignored = 1
+  ignored          = 1
 }
 
 provider aws {
@@ -29,16 +24,16 @@ provider noversion {
 variable foo {
   description = "foo description"
   default     = "foo default"
-  ignored = 1
+  ignored     = 1
 }
 
 output foo {
   description = "foo description"
-  ignored = 1
+  ignored     = 1
 }
 
 resource null_resource foo {
-  ignored = 1
+  ignored  = 1
   provider = "notnull.baz"
 }
 
@@ -47,6 +42,6 @@ data external foo {
 }
 
 module foo {
-  source = "foo/bar/baz"
+  source  = "foo/bar/baz"
   version = "1.2.3"
 }

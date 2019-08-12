@@ -1,5 +1,5 @@
 {
-  "path": "./tfconfig/test-fixtures/backend",
+  "path": "test-fixtures/backend",
   "required_core": [
     ">= 0.11.0"
   ],
@@ -19,7 +19,7 @@
       "name": "foo",
       "default": "bar",
       "pos": {
-        "filename": "tfconfig/test-fixtures/backend/backend.tf",
+        "filename": "test-fixtures/backend/backend.tf",
         "line": 21
       }
     }
@@ -28,7 +28,7 @@
     "foo": {
       "name": "foo",
       "pos": {
-        "filename": "tfconfig/test-fixtures/backend/backend.tf",
+        "filename": "test-fixtures/backend/backend.tf",
         "line": 25
       }
     }
