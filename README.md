@@ -15,8 +15,8 @@ import "github.com/hashicorp/terraform-config-inspect/tfconfig"
 
 /// ...
 
-    module, diags := tfconfig.LoadModule(dir)
-    /// ...
+module, diags := tfconfig.LoadModule(dir)
+/// ...
 ```
 
 There are not yet any formal compatibility promises for the Terraform

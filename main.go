@@ -95,6 +95,14 @@ Provider Requirements:
 * **{{ $name }}:** {{ if $versions }}{{ commas $versions | tt }}{{ else }}(any version){{ end }}
 {{- end}}{{end}}
 
+{{- if .BackendType}}
+
+## Backend {{ tt .BackendType }}
+{{- if .BackendConfiguration}}
+{{- range $k,$v := .BackendConfiguration }}
+* {{ tt $k }}: {{ tt $v }}
+{{- end}}{{end}}{{end}}
+
 {{- if .Variables}}
 
 ## Input Variables

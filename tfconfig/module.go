@@ -12,6 +12,11 @@ type Module struct {
 	RequiredCore      []string            `json:"required_core,omitempty"`
 	RequiredProviders map[string][]string `json:"required_providers"`
 
+	// https://www.terraform.io/docs/backends/config.html
+	// "You specify the backend type as a key to the backend stanza. Within the stanza are backend-specific configuration keys."
+	BackendType          string            `json:"backend_type,omitempty"`
+	BackendConfiguration map[string]string `json:"backend_configuration,omitempty"`
+
 	ManagedResources map[string]*Resource   `json:"managed_resources"`
 	DataResources    map[string]*Resource   `json:"data_resources"`
 	ModuleCalls      map[string]*ModuleCall `json:"module_calls"`
@@ -24,12 +29,13 @@ type Module struct {
 
 func newModule(path string) *Module {
 	return &Module{
-		Path:              path,
-		Variables:         make(map[string]*Variable),
-		Outputs:           make(map[string]*Output),
-		RequiredProviders: make(map[string][]string),
-		ManagedResources:  make(map[string]*Resource),
-		DataResources:     make(map[string]*Resource),
-		ModuleCalls:       make(map[string]*ModuleCall),
+		Path:                 path,
+		Variables:            make(map[string]*Variable),
+		Outputs:              make(map[string]*Output),
+		RequiredProviders:    make(map[string][]string),
+		BackendConfiguration: make(map[string]string),
+		ManagedResources:     make(map[string]*Resource),
+		DataResources:        make(map[string]*Resource),
+		ModuleCalls:          make(map[string]*ModuleCall),
 	}
 }
