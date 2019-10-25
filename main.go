@@ -49,7 +49,8 @@ func showModuleJSON(module *tfconfig.Module) {
 func showModuleMarkdown(module *tfconfig.Module) {
 	tmpl := template.New("md")
 	tmpl.Funcs(template.FuncMap{
-		"tt": func(s string) string {
+		"tt": func(i interface{}) string {
+			s := fmt.Sprintf("%v", i)
 			return "`" + s + "`"
 		},
 		"commas": func(s []string) string {
@@ -58,6 +59,16 @@ func showModuleMarkdown(module *tfconfig.Module) {
 		"json": func(v interface{}) (string, error) {
 			j, err := json.Marshal(v)
 			return string(j), err
+		},
+		"skip": func(p tfconfig.SourcePos) bool {
+			blacklist := []string{"environment.tf.json", "global-variables.tf.json", "account-variables.tf.json", "variables.tf"}
+
+			for _, b := range blacklist {
+				if p.Filename == b {
+					return false
+				}
+			}
+			return true
 		},
 		"severity": func(s tfconfig.DiagSeverity) string {
 			switch s {
@@ -79,70 +90,58 @@ func showModuleMarkdown(module *tfconfig.Module) {
 }
 
 const markdownTemplate = `
-# Module {{ tt .Path }}
-
-{{- if .RequiredCore}}
-
-Core Version Constraints:
-{{- range .RequiredCore }}
-* {{ tt . }}
-{{- end}}{{end}}
-
-{{- if .RequiredProviders}}
-
-Provider Requirements:
-{{- range $name, $versions := .RequiredProviders }}
-* **{{ $name }}:** {{ if $versions }}{{ commas $versions | tt }}{{ else }}(any version){{ end }}
-{{- end}}{{end}}
-
-{{- if .Variables}}
-
-## Input Variables
-{{- range .Variables }}
-* {{ tt .Name }}{{ if .Default }} (default {{ json .Default | tt }}){{else}} (required){{end}}
-{{- if .Description}}: {{ .Description }}{{ end }}
-{{- end}}{{end}}
+## Inputs
+| Name | Description | Type | Default | Required |
+|------|-------------|:----:|:-----:|:-----:|
+{{- range .Variables }}{{if skip .Pos }}
+| {{ tt .Name }} | {{- if .Description}}{{ .Description }}{{ end }} | | {{ tt .Default }} | {{if tt .Default}}no{{else}}yes{{end}} |{{end}}{{end}}
 
 {{- if .Outputs}}
 
-## Output Values
+## Outputs
+| Name | Description |
+|------|-------------|
 {{- range .Outputs }}
-* {{ tt .Name }}{{ if .Description}}: {{ .Description }}{{ end }}
+| {{ tt .Name }} | {{ if .Description}}{{ .Description }}{{ end }} |
 {{- end}}{{end}}
 
 {{- if .ManagedResources}}
 
-## Managed Resources
+Managed Resources
+-----------------
 {{- range .ManagedResources }}
-* {{ printf "%s.%s" .Type .Name | tt }} from {{ tt .Provider.Name }}
+* {{ printf "%s.%s" .Type .Name | tt }}
 {{- end}}{{end}}
 
 {{- if .DataResources}}
 
-## Data Resources
+Data Resources
+--------------
 {{- range .DataResources }}
-* {{ printf "data.%s.%s" .Type .Name | tt }} from {{ tt .Provider.Name }}
+* {{ printf "data.%s.%s" .Type .Name | tt }}
 {{- end}}{{end}}
 
 {{- if .ModuleCalls}}
 
-## Child Modules
+Child Modules
+-------------
 {{- range .ModuleCalls }}
 * {{ tt .Name }} from {{ tt .Source }}{{ if .Version }} ({{ tt .Version }}){{ end }}
 {{- end}}{{end}}
 
 {{- if .Diagnostics}}
 
-## Problems
+Problems
+-------------
 {{- range .Diagnostics }}
 
-## {{ severity .Severity }}{{ .Summary }}{{ if .Pos }}
+{{ severity .Severity }}{{ .Summary }}{{ if .Pos }}
+-------------
 
 (at {{ tt .Pos.Filename }} line {{ .Pos.Line }}{{ end }})
 {{ if .Detail }}
 {{ .Detail }}
 {{- end }}
 
-{{- end}}{{end}}
-
+{{- end}}{{end}} 
 `
