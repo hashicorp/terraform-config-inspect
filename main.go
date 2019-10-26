@@ -143,5 +143,5 @@ Problems
 {{ .Detail }}
 {{- end }}
 
-{{- end}}{{end}} 
+{{- end}}{{end}}
 `
