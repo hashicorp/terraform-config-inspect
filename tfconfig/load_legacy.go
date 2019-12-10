@@ -269,12 +269,12 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 				}
 				// Even if there wasn't an explicit version required, we still
 				// need an entry in our map to signal the unversioned dependency.
-				if _, exists := mod.ProviderRequirements[name]; !exists {
-					mod.ProviderRequirements[name] = &ProviderRequirement{}
+				if _, exists := mod.RequiredProviders[name]; !exists {
+					mod.RequiredProviders[name] = &ProviderRequirement{}
 				}
 
 				if block.Version != "" {
-					mod.ProviderRequirements[name].VersionConstraints = append(mod.ProviderRequirements[name].VersionConstraints, block.Version)
+					mod.RequiredProviders[name].VersionConstraints = append(mod.RequiredProviders[name].VersionConstraints, block.Version)
 				}
 			}
 		}

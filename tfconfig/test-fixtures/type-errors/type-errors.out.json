@@ -77,11 +77,11 @@
     "required_providers": {
         "foo": {
             "source": "",
-            "version_constraints": []
+            "version_constraints": null
         },
         "": {
             "source": "",
-            "version_constraints": []
+            "version_constraints": null
         }
     },
     "variables": {

@@ -51,13 +51,13 @@ func (m *Module) init(diags Diagnostics) {
 	// but we'll make sure the requirement value is still non-nil in this
 	// case so callers can easily recognize it.
 	for _, r := range m.ManagedResources {
-		if _, exists := m.ProviderRequirements[r.Provider.Name]; !exists {
-			m.ProviderRequirements[r.Provider.Name] = &ProviderRequirement{}
+		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
+			m.RequiredProviders[r.Provider.Name] = &ProviderRequirement{}
 		}
 	}
 	for _, r := range m.DataResources {
-		if _, exists := m.ProviderRequirements[r.Provider.Name]; !exists {
-			m.ProviderRequirements[r.Provider.Name] = &ProviderRequirement{}
+		if _, exists := m.RequiredProviders[r.Provider.Name]; !exists {
+			m.RequiredProviders[r.Provider.Name] = &ProviderRequirement{}
 		}
 	}
 

@@ -1,0 +1,22 @@
+{
+    "path": "test-fixtures/provider-source",
+    "required_providers": {
+        "foo": {
+            "source": "",
+            "version_constraints": [
+                "2.0.0"
+            ]
+        },
+        "bat": {
+            "source": "baz/bat",
+            "version_constraints": [
+                "1.0.0"
+            ]
+        }
+    },
+    "variables": {},
+    "outputs": {},
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {}
+}

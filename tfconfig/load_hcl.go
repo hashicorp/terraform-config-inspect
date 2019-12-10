@@ -51,23 +51,17 @@ func loadModule(dir string) (*Module, Diagnostics) {
 					}
 				}
 
-				for _, block := range content.Blocks {
-					// Our schema only allows required_providers here, so we
-					// assume that we'll only get that block type.
-					attrs, attrDiags := block.Body.JustAttributes()
-					diags = append(diags, attrDiags...)
-
-					for name, attr := range attrs {
-						// Even if there isn't an explicit version required, we still
-						// need an entry in our map to signal the unversioned dependency.
-						if _, exists := mod.ProviderRequirements[name]; !exists {
-							mod.ProviderRequirements[name] = &ProviderRequirement{}
-						}
-						var version string
-						valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
-						diags = append(diags, valDiags...)
-						if !valDiags.HasErrors() {
-							mod.ProviderRequirements[name].VersionConstraints = append(mod.ProviderRequirements[name].VersionConstraints, version)
+				for _, innerBlock := range content.Blocks {
+					switch innerBlock.Type {
+					case "required_providers":
+						reqs, reqsDiags := decodeRequiredProvidersBlock(innerBlock)
+						diags = append(diags, reqsDiags...)
+						for name, req := range reqs {
+							if _, exists := mod.RequiredProviders[name]; !exists {
+								mod.RequiredProviders[name] = req
+							} else {
+								mod.RequiredProviders[name].VersionConstraints = append(mod.RequiredProviders[name].VersionConstraints, req.VersionConstraints...)
+							}
 						}
 					}
 				}
@@ -185,15 +179,15 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				name := block.Labels[0]
 				// Even if there isn't an explicit version required, we still
 				// need an entry in our map to signal the unversioned dependency.
-				if _, exists := mod.ProviderRequirements[name]; !exists {
-					mod.ProviderRequirements[name] = &ProviderRequirement{}
+				if _, exists := mod.RequiredProviders[name]; !exists {
+					mod.RequiredProviders[name] = &ProviderRequirement{}
 				}
 				if attr, defined := content.Attributes["version"]; defined {
 					var version string
 					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
 					diags = append(diags, valDiags...)
 					if !valDiags.HasErrors() {
-						mod.ProviderRequirements[name].VersionConstraints = append(mod.ProviderRequirements[name].VersionConstraints, version)
+						mod.RequiredProviders[name].VersionConstraints = append(mod.RequiredProviders[name].VersionConstraints, version)
 					}
 				}
 

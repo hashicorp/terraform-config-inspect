@@ -10,29 +10,31 @@
             "version_constraints": [
                 "1.0.0",
                 "1.1.0"
-            ],
-            "baz": {
-                "source": "",
-                "version_constraints": [
-                    "2.0.0"
-                ]
-            },
-            "variables": {},
-            "outputs": {},
-            "managed_resources": {
-                "bar_bar.bar": {
-                    "mode": "managed",
-                    "type": "bar_bar",
-                    "name": "bar",
-                    "provider": {
-                        "name": "bar"
-                    },
-                    "pos": {
-                        "filename": "test-fixtures/provider-configs/provider-configs.tf",
-                        "line": 10
-                    }
-                }
-            },
-            "data_resources": {},
-            "module_calls": {}
+            ]
+        },
+        "baz": {
+            "source": "",
+            "version_constraints": [
+                "2.0.0"
+            ]
         }
+    },
+    "variables": {},
+    "outputs": {},
+    "managed_resources": {
+        "bar_bar.bar": {
+            "mode": "managed",
+            "type": "bar_bar",
+            "name": "bar",
+            "provider": {
+                "name": "bar"
+            },
+            "pos": {
+                "filename": "test-fixtures/provider-configs/provider-configs.tf",
+                "line": 10
+            }
+        }
+    },
+    "data_resources": {},
+    "module_calls": {}
+}

@@ -2,6 +2,8 @@ package tfconfig
 
 import (
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/gohcl"
+	"github.com/zclconf/go-cty/cty/gocty"
 )
 
 // ProviderRef is a reference to a provider configuration within a module.
@@ -23,28 +25,59 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequire
 	for name, attr := range attrs {
 		expr, err := attr.Expr.Value(nil)
 		if err != nil {
-			diags = append(diags, &hcl.Diagnostic{
-				Severity: hcl.DiagError,
-				Summary:  "Invalid required_providers reference",
-				Detail:   err.Error(),
-				Subject:  attr.Expr.Range().Ptr(),
-			})
-			continue
+			diags = append(diags, err...)
 		}
-		if expr.Type().IsPrimitiveType() {
-			reqs[name] = &ProviderRequirement{
-				VersionConstraints: []string{expr.AsString()},
+
+		switch {
+		case expr.Type().IsPrimitiveType():
+			var version string
+			valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
+			diags = append(diags, valDiags...)
+			if !valDiags.HasErrors() {
+				reqs[name] = &ProviderRequirement{
+					VersionConstraints: []string{version},
+				}
 			}
-		} else if expr.Type().IsObjectType() {
-			pr := &ProviderRequirement{}
+
+		case expr.Type().IsObjectType():
+			var pr ProviderRequirement
 			if expr.Type().HasAttribute("version") {
-				version := expr.GetAttr("version").AsString()
-				pr.VersionConstraints = append(pr.VersionConstraints, version)
+				var version string
+				err := gocty.FromCtyValue(expr.GetAttr("version"), &version)
+				if err == nil {
+					pr.VersionConstraints = append(pr.VersionConstraints, version)
+				} else {
+					diags = append(diags, &hcl.Diagnostic{
+						Severity: hcl.DiagError,
+						Summary:  "Unsuitable value type",
+						Detail:   "Unsuitable value: string required",
+						Subject:  attr.Expr.Range().Ptr(),
+					})
+				}
 			}
 			if expr.Type().HasAttribute("source") {
-				pr.Source = expr.GetAttr("source").AsString()
+				var source string
+				err := gocty.FromCtyValue(expr.GetAttr("source"), &source)
+				if err == nil {
+					pr.Source = source
+				} else {
+					diags = append(diags, &hcl.Diagnostic{
+						Severity: hcl.DiagError,
+						Summary:  "Unsuitable value type",
+						Detail:   "Unsuitable value: string required",
+						Subject:  attr.Expr.Range().Ptr(),
+					})
+				}
 			}
-			reqs[name] = pr
+			reqs[name] = &pr
+
+		default:
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Unsuitable value type",
+				Detail:   "Unsuitable value: string required",
+				Subject:  attr.Expr.Range().Ptr(),
+			})
 		}
 	}
 
