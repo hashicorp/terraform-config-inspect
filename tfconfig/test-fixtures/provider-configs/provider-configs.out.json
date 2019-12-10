@@ -1,19 +1,14 @@
 {
     "path": "test-fixtures/provider-configs",
     "required_providers": {
-        "foo": {
-            "source": "",
-            "version_constraints": null
-        },
+        "foo": {},
         "bar": {
-            "source": "",
             "version_constraints": [
                 "1.0.0",
                 "1.1.0"
             ]
         },
         "baz": {
-            "source": "",
             "version_constraints": [
                 "2.0.0"
             ]

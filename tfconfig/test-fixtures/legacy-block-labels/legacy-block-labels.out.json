@@ -5,23 +5,13 @@
     ],
     "required_providers": {
         "aws": {
-            "source": "",
             "version_constraints": [
                 "1.0.0"
             ]
         },
-        "notnull": {
-            "source": "",
-            "version_constraints": null
-        },
-        "external": {
-            "source": "",
-            "version_constraints": null
-        },
-        "noversion": {
-            "source": "",
-            "version_constraints": null
-        }
+        "notnull": {},
+        "external": {},
+        "noversion": {}
     },
     "variables": {
         "foo": {

@@ -1,14 +1,8 @@
 {
     "path": "test-fixtures/data-resources",
     "required_providers": {
-        "external": {
-            "source": "",
-            "version_constraints": null
-        },
-        "notexternal": {
-            "source": "",
-            "version_constraints": null
-        }
+        "external": {},
+        "notexternal": {}
     },
     "variables": {},
     "outputs": {},

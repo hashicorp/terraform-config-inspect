@@ -1,14 +1,8 @@
 {
     "path": "test-fixtures/resource-provider-alias",
     "required_providers": {
-        "aws": {
-            "source": "",
-            "version_constraints": null
-        },
-        "notaws": {
-            "source": "",
-            "version_constraints": null
-        }
+        "aws": {},
+        "notaws": {}
     },
     "variables": {},
     "outputs": {},

@@ -4,18 +4,13 @@
         "true"
     ],
     "required_providers": {
-        "true": {
-            "source": "",
-            "version_constraints": null
-        },
+        "true": {},
         "yep": {
-            "source": "",
             "version_constraints": [
                 "true"
             ]
         },
         "foo": {
-            "source": "",
             "version_constraints": [
                 "true"
             ]

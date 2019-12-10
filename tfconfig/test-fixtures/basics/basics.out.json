@@ -1,10 +1,7 @@
 {
   "path": "test-fixtures/basics",
   "required_providers": {
-    "null": {
-      "source": "",
-      "version_constraints": null
-    }
+    "null": {}
   },
   "variables": {
     "A": {

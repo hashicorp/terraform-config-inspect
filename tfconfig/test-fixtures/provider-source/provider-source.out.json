@@ -2,7 +2,6 @@
     "path": "test-fixtures/provider-source",
     "required_providers": {
         "foo": {
-            "source": "",
             "version_constraints": [
                 "2.0.0"
             ]

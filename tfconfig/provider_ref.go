@@ -15,8 +15,8 @@ type ProviderRef struct {
 }
 
 type ProviderRequirement struct {
-	Source             string   `json:"source"`
-	VersionConstraints []string `json:"version_constraints"`
+	Source             string   `json:"source,omitempty"`
+	VersionConstraints []string `json:"version_constraints,omitempty"`
 }
 
 func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequirement, hcl.Diagnostics) {
