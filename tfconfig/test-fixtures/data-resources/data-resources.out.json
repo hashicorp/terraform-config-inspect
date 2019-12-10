@@ -1,14 +1,17 @@
 {
     "path": "test-fixtures/data-resources",
-
     "required_providers": {
-        "external": [],
-        "notexternal": []
+        "external": {
+            "source": "",
+            "version_constraints": null
+        },
+        "notexternal": {
+            "source": "",
+            "version_constraints": null
+        }
     },
-
     "variables": {},
     "outputs": {},
-
     "managed_resources": {},
     "data_resources": {
         "data.external.foo": {

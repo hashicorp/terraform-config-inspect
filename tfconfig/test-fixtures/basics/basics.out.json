@@ -1,10 +1,11 @@
 {
   "path": "test-fixtures/basics",
-
   "required_providers": {
-    "null": []
+    "null": {
+      "source": "",
+      "version_constraints": null
+    }
   },
-
   "variables": {
     "A": {
       "name": "A",
@@ -40,7 +41,6 @@
       }
     }
   },
-
   "managed_resources": {
     "null_resource.A": {
       "mode": "managed",

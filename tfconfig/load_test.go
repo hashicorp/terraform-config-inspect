@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 	"path/filepath"
 	"testing"
+	"fmt"
 
 	"github.com/go-test/deep"
 )
@@ -51,7 +52,8 @@ func TestLoadModule(t *testing.T) {
 
 			if diff := deep.Equal(got, want); diff != nil {
 				for _, problem := range diff {
-					t.Errorf("%s", problem)
+					fmt.Printf("got: %#v\n", got["required_providers"])
+					t.Fatalf("%s", problem)
 				}
 			}
 		})

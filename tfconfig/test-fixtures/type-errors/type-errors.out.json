@@ -1,6 +1,5 @@
 {
     "path": "test-fixtures/type-errors",
-
     "diagnostics": [
         {
             "severity": "error",
@@ -75,12 +74,16 @@
             }
         }
     ],
-
     "required_providers": {
-        "foo": [],
-        "": []
+        "foo": {
+            "source": "",
+            "version_constraints": []
+        },
+        "": {
+            "source": "",
+            "version_constraints": []
+        }
     },
-
     "variables": {
         "foo": {
             "name": "foo",
@@ -100,7 +103,6 @@
             }
         }
     },
-
     "managed_resources": {
         "foo.foo": {
             "mode": "managed",

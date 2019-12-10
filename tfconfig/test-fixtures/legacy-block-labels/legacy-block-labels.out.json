@@ -1,14 +1,28 @@
 {
     "path": "test-fixtures/legacy-block-labels",
-
-    "required_core": [">= 0.11.0"],
+    "required_core": [
+        ">= 0.11.0"
+    ],
     "required_providers": {
-        "aws": ["1.0.0"],
-        "notnull": [],
-        "external": [],
-        "noversion": []
+        "aws": {
+            "source": "",
+            "version_constraints": [
+                "1.0.0"
+            ]
+        },
+        "notnull": {
+            "source": "",
+            "version_constraints": null
+        },
+        "external": {
+            "source": "",
+            "version_constraints": null
+        },
+        "noversion": {
+            "source": "",
+            "version_constraints": null
+        }
     },
-
     "variables": {
         "foo": {
             "name": "foo",
@@ -30,7 +44,6 @@
             }
         }
     },
-
     "managed_resources": {
         "null_resource.foo": {
             "mode": "managed",

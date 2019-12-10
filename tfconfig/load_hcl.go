@@ -7,8 +7,8 @@ import (
 
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 
-	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2"
+	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclparse"
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
@@ -58,11 +58,16 @@ func loadModule(dir string) (*Module, Diagnostics) {
 					diags = append(diags, attrDiags...)
 
 					for name, attr := range attrs {
+						// Even if there isn't an explicit version required, we still
+						// need an entry in our map to signal the unversioned dependency.
+						if _, exists := mod.ProviderRequirements[name]; !exists {
+							mod.ProviderRequirements[name] = &ProviderRequirement{}
+						}
 						var version string
 						valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
 						diags = append(diags, valDiags...)
 						if !valDiags.HasErrors() {
-							mod.RequiredProviders[name] = append(mod.RequiredProviders[name], version)
+							mod.ProviderRequirements[name].VersionConstraints = append(mod.ProviderRequirements[name].VersionConstraints, version)
 						}
 					}
 				}
@@ -178,20 +183,18 @@ func loadModule(dir string) (*Module, Diagnostics) {
 				diags = append(diags, contentDiags...)
 
 				name := block.Labels[0]
-
+				// Even if there isn't an explicit version required, we still
+				// need an entry in our map to signal the unversioned dependency.
+				if _, exists := mod.ProviderRequirements[name]; !exists {
+					mod.ProviderRequirements[name] = &ProviderRequirement{}
+				}
 				if attr, defined := content.Attributes["version"]; defined {
 					var version string
 					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &version)
 					diags = append(diags, valDiags...)
 					if !valDiags.HasErrors() {
-						mod.RequiredProviders[name] = append(mod.RequiredProviders[name], version)
+						mod.ProviderRequirements[name].VersionConstraints = append(mod.ProviderRequirements[name].VersionConstraints, version)
 					}
-				}
-
-				// Even if there wasn't an explicit version required, we still
-				// need an entry in our map to signal the unversioned dependency.
-				if _, exists := mod.RequiredProviders[name]; !exists {
-					mod.RequiredProviders[name] = []string{}
 				}
 
 			case "resource", "data":

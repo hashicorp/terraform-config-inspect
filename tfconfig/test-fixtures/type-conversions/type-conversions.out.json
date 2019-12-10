@@ -1,13 +1,26 @@
 {
     "path": "test-fixtures/type-conversions",
-
-    "required_core": ["true"],
+    "required_core": [
+        "true"
+    ],
     "required_providers": {
-        "true": [],
-        "yep": ["true"],
-        "foo": ["true"]
+        "true": {
+            "source": "",
+            "version_constraints": null
+        },
+        "yep": {
+            "source": "",
+            "version_constraints": [
+                "true"
+            ]
+        },
+        "foo": {
+            "source": "",
+            "version_constraints": [
+                "true"
+            ]
+        }
     },
-
     "variables": {
         "foo": {
             "name": "foo",
@@ -29,7 +42,6 @@
             }
         }
     },
-
     "managed_resources": {
         "foo.foo": {
             "mode": "managed",
