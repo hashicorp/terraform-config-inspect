@@ -1,14 +1,11 @@
 {
     "path": "test-fixtures/resource-provider-alias",
-
     "required_providers": {
-        "aws": [],
-        "notaws": []
+        "aws": {},
+        "notaws": {}
     },
-
     "variables": {},
     "outputs": {},
-
     "managed_resources": {
         "aws_instance.foo": {
             "mode": "managed",

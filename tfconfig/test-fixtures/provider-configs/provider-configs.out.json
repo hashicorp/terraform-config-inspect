@@ -1,15 +1,21 @@
 {
     "path": "test-fixtures/provider-configs",
-
     "required_providers": {
-        "foo": [],
-        "bar": ["1.0.0", "1.1.0"],
-        "baz": ["2.0.0"]
+        "foo": {},
+        "bar": {
+            "version_constraints": [
+                "1.0.0",
+                "1.1.0"
+            ]
+        },
+        "baz": {
+            "version_constraints": [
+                "2.0.0"
+            ]
+        }
     },
-
     "variables": {},
     "outputs": {},
-
     "managed_resources": {
         "bar_bar.bar": {
             "mode": "managed",
