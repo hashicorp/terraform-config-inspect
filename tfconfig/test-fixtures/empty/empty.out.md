@@ -1,3 +1,0 @@
-
-# Module `test-fixtures/empty`
-
