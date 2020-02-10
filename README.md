@@ -13,10 +13,11 @@ $ go get github.com/hashicorp/terraform-config-inspect
 ```go
 import "github.com/hashicorp/terraform-config-inspect/tfconfig"
 
-/// ...
+// ...
 
-    module, diags := tfconfig.LoadModule(dir)
-    /// ...
+module, diags := tfconfig.LoadModule(dir)
+
+// ...
 ```
 
 There are not yet any formal compatibility promises for the Terraform
@@ -32,9 +33,10 @@ it also contains a CLI tool called `terraform-config-inspect`, installed
 automatically by the `go get` command above, that allows viewing module
 information in either a Markdown-like format or in JSON format.
 
-```
+```sh
 $ terraform-config-inspect path/to/module
-
+```
+```markdown
 # Module `path/to/module`
 
 Provider Requirements:
@@ -53,8 +55,10 @@ Provider Requirements:
 * `null_resource.b` from `null`
 ```
 
-```
+```sh
 $ terraform-config-inspect --json path/to/module
+```
+```json
 {
   "path": "path/to/module",
   "variables": {

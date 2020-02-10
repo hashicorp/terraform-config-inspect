@@ -1,0 +1,38 @@
+{
+    "path": "testdata/for-expression",
+    "variables": {
+        "log_categories": {
+            "name": "log_categories",
+            "pos": {
+                "filename": "testdata/for-expression/for-expression.tf",
+                "line": 1
+            },
+            "default": [
+                "one",
+                "two",
+                "three"
+            ]
+        },
+        "enabled": {
+            "name": "enabled",
+            "pos": {
+                "filename": "testdata/for-expression/for-expression.tf",
+                "line": 4
+            },
+            "default": true
+        },
+        "retention_days": {
+            "name": "retention_days",
+            "pos": {
+                "filename": "testdata/for-expression/for-expression.tf",
+                "line": 7
+            },
+            "default": 7
+        }
+    },
+    "required_providers": {},
+    "outputs": {},
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {}
+}

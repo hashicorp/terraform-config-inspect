@@ -10,7 +10,7 @@ import (
 )
 
 func TestLoadModule(t *testing.T) {
-	fixturesDir := "test-fixtures"
+	fixturesDir := "testdata"
 	testDirs, err := ioutil.ReadDir(fixturesDir)
 	if err != nil {
 		t.Fatal(err)
