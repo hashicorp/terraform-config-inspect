@@ -49,12 +49,20 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 			}
 
 			type TerraformBlock struct {
-				RequiredVersion string `hcl:"required_version"`
+				RequiredVersion   string      `hcl:"required_version"`
+				RequiredProviders interface{} `hcl:"required_providers"`
+				Fields            []string    `hcl:",decodedFields"`
 			}
 			var block TerraformBlock
 			err = legacyhcl.DecodeObject(&block, item.Val)
 			if err != nil {
 				return nil, diagnosticsErrorf("terraform block: %s", err)
+			}
+
+			for _, field := range block.Fields {
+				if field == "RequiredProviders" {
+					return nil, diagnosticsErrorf("terraform.required_providers must not exist")
+				}
 			}
 
 			if block.RequiredVersion != "" {

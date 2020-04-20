@@ -7,7 +7,7 @@ Provider Requirements:
 
 ## Problems
 
-## Warning: Multiple provider source attriubtes
+## Error: Multiple provider source attributes
 
 (at `testdata/provider-source-invalid/provider-source-invalid.tf` line 15)
 

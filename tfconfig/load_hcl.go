@@ -64,8 +64,8 @@ func loadModule(dir string) (*Module, Diagnostics) {
 									source := mod.RequiredProviders[name].Source
 									if source != "" && source != req.Source {
 										diags = append(diags, &hcl.Diagnostic{
-											Severity: hcl.DiagWarning,
-											Summary:  "Multiple provider source attriubtes",
+											Severity: hcl.DiagError,
+											Summary:  "Multiple provider source attributes",
 											Detail:   fmt.Sprintf("Found multiple source attributes for provider %s: %q, %q", name, source, req.Source),
 											Subject:  &innerBlock.DefRange,
 										})
