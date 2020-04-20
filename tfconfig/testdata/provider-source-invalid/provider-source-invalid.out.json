@@ -22,8 +22,8 @@
     "module_calls": {},
     "diagnostics": [
         {
-            "severity": "warning",
-            "summary": "Multiple provider source attriubtes",
+            "severity": "error",
+            "summary": "Multiple provider source attributes",
             "detail": "Found multiple source attributes for provider bat: \"abc/bat\", \"baz/bat\"",
             "pos": {
                 "filename": "testdata/provider-source-invalid/provider-source-invalid.tf",
