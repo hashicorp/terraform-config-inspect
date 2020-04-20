@@ -1,0 +1,34 @@
+{
+    "path": "testdata/provider-source-invalid",
+    "required_providers": {
+        "foo": {
+            "source": "abc/foo",
+            "version_constraints": [
+                "~> 2.0.0",
+                "~> 2.1.0"
+            ]
+        },
+        "bat": {
+            "source": "abc/bat",
+            "version_constraints": [
+                "1.0.0"
+            ]
+        }
+    },
+    "variables": {},
+    "outputs": {},
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {},
+    "diagnostics": [
+        {
+            "severity": "warning",
+            "summary": "Multiple provider source attriubtes",
+            "detail": "Found multiple source attributes for provider bat: \"abc/bat\", \"baz/bat\"",
+            "pos": {
+                "filename": "testdata/provider-source-invalid/provider-source-invalid.tf",
+                "line": 15
+            }
+        }
+    ]
+}
