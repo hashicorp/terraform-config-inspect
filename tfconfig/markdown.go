@@ -56,7 +56,7 @@ Provider Requirements:
 
 ## Input Variables
 {{- range .Variables }}
-* {{ tt .Name }}{{ if .Default }} (default {{ json .Default | tt }}){{else}} (required){{end}}
+* {{ tt .Name }}{{ if .Required }} (required){{else}} (default {{ json .Default | tt }}){{end}}
 {{- if .Description}}: {{ .Description }}{{ end }}
 {{- end}}{{end}}
 

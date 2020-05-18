@@ -7,6 +7,8 @@
     "A": {
       "name": "A",
       "description": "The A variable OVERRIDDEN",
+      "default": null,
+      "required": true,
       "pos": {
         "filename": "testdata/overrides/overrides_override.tf",
         "line": 1
@@ -15,6 +17,8 @@
     "B": {
       "name": "B",
       "description": "The B variable",
+      "default": null,
+      "required": true,
       "pos": {
         "filename": "testdata/overrides/overrides.tf",
         "line": 5
@@ -23,6 +27,8 @@
     "C": {
       "name": "C",
       "description": "An entirely new variable C",
+      "default": null,
+      "required": true,
       "pos": {
         "filename": "testdata/overrides/overrides_override.tf",
         "line": 5

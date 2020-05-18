@@ -11,7 +11,8 @@
                 "one",
                 "two",
                 "three"
-            ]
+            ],
+            "required": false
         },
         "enabled": {
             "name": "enabled",
@@ -19,7 +20,8 @@
                 "filename": "testdata/for-expression/for-expression.tf",
                 "line": 4
             },
-            "default": true
+            "default": true,
+            "required": false
         },
         "retention_days": {
             "name": "retention_days",
@@ -27,7 +29,8 @@
                 "filename": "testdata/for-expression/for-expression.tf",
                 "line": 7
             },
-            "default": 7
+            "default": 7,
+            "required": false
         }
     },
     "required_providers": {},
