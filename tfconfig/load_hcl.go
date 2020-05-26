@@ -60,6 +60,20 @@ func loadModule(dir string) (*Module, Diagnostics) {
 							if _, exists := mod.RequiredProviders[name]; !exists {
 								mod.RequiredProviders[name] = req
 							} else {
+								if req.Source != "" {
+									source := mod.RequiredProviders[name].Source
+									if source != "" && source != req.Source {
+										diags = append(diags, &hcl.Diagnostic{
+											Severity: hcl.DiagError,
+											Summary:  "Multiple provider source attributes",
+											Detail:   fmt.Sprintf("Found multiple source attributes for provider %s: %q, %q", name, source, req.Source),
+											Subject:  &innerBlock.DefRange,
+										})
+									} else {
+										mod.RequiredProviders[name].Source = req.Source
+									}
+								}
+
 								mod.RequiredProviders[name].VersionConstraints = append(mod.RequiredProviders[name].VersionConstraints, req.VersionConstraints...)
 							}
 						}
