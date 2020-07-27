@@ -1,14 +1,13 @@
 package tfconfig
 
 import (
-	"io/ioutil"
 	"strings"
 
 	legacyhcl "github.com/hashicorp/hcl"
 	legacyast "github.com/hashicorp/hcl/hcl/ast"
 )
 
-func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
+func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 	// This implementation is intentionally more quick-and-dirty than the
 	// main loader. In particular, it doesn't bother to keep careful track
 	// of multiple error messages because we always fall back on returning
@@ -16,13 +15,13 @@ func loadModuleLegacyHCL(dir string) (*Module, Diagnostics) {
 	// an error, and thus the errors here are not seen by the end-caller.
 	mod := newModule(dir)
 
-	primaryPaths, diags := dirFiles(dir)
+	primaryPaths, diags := dirFiles(fs, dir)
 	if diags.HasErrors() {
 		return mod, diagnosticsHCL(diags)
 	}
 
 	for _, filename := range primaryPaths {
-		src, err := ioutil.ReadFile(filename)
+		src, err := fs.ReadFile(filename)
 		if err != nil {
 			return mod, diagnosticsErrorf("Error reading %s: %s", filename, err)
 		}
@@ -320,7 +319,7 @@ func unwrapLegacyHCLObjectKeysFromJSON(item *legacyast.ObjectItem, depth int) {
 			item.Val = &legacyast.ObjectType{
 				List: &legacyast.ObjectList{
 					Items: []*legacyast.ObjectItem{
-						&legacyast.ObjectItem{
+						{
 							Keys: []*legacyast.ObjectKey{key},
 							Val:  item.Val,
 						},

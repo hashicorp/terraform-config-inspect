@@ -13,9 +13,9 @@ import (
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
 
-func loadModule(dir string) (*Module, Diagnostics) {
+func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 	mod := newModule(dir)
-	primaryPaths, diags := dirFiles(dir)
+	primaryPaths, diags := dirFiles(fs, dir)
 
 	parser := hclparse.NewParser()
 
