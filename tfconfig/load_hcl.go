@@ -22,10 +22,20 @@ func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 	for _, filename := range primaryPaths {
 		var file *hcl.File
 		var fileDiags hcl.Diagnostics
+
+		b, err := fs.ReadFile(filename)
+		if err != nil {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Failed to read file",
+				Detail:   fmt.Sprintf("The configuration file %q could not be read.", filename),
+			})
+			continue
+		}
 		if strings.HasSuffix(filename, ".json") {
-			file, fileDiags = parser.ParseJSONFile(filename)
+			file, fileDiags = parser.ParseJSON(b, filename)
 		} else {
-			file, fileDiags = parser.ParseHCLFile(filename)
+			file, fileDiags = parser.ParseHCL(b, filename)
 		}
 		diags = append(diags, fileDiags...)
 		if file == nil {
