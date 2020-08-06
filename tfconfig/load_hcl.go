@@ -13,19 +13,29 @@ import (
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
 
-func loadModule(dir string) (*Module, Diagnostics) {
+func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 	mod := newModule(dir)
-	primaryPaths, diags := dirFiles(dir)
+	primaryPaths, diags := dirFiles(fs, dir)
 
 	parser := hclparse.NewParser()
 
 	for _, filename := range primaryPaths {
 		var file *hcl.File
 		var fileDiags hcl.Diagnostics
+
+		b, err := fs.ReadFile(filename)
+		if err != nil {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Failed to read file",
+				Detail:   fmt.Sprintf("The configuration file %q could not be read.", filename),
+			})
+			continue
+		}
 		if strings.HasSuffix(filename, ".json") {
-			file, fileDiags = parser.ParseJSONFile(filename)
+			file, fileDiags = parser.ParseJSON(b, filename)
 		} else {
-			file, fileDiags = parser.ParseHCLFile(filename)
+			file, fileDiags = parser.ParseHCL(b, filename)
 		}
 		diags = append(diags, fileDiags...)
 		if file == nil {
