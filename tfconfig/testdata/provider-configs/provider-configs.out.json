@@ -16,6 +16,10 @@
     },
     "variables": {},
     "outputs": {},
+    "provider_configs": {
+        "foo": {"name": "foo"},
+        "bar": {"name": "bar"}
+    },
     "managed_resources": {
         "bar_bar.bar": {
             "mode": "managed",
