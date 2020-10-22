@@ -13,7 +13,7 @@ func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 	// of multiple error messages because we always fall back on returning
 	// the main parser's error message if our fallback parsing produces
 	// an error, and thus the errors here are not seen by the end-caller.
-	mod := newModule(dir)
+	mod := NewModule(dir)
 
 	primaryPaths, diags := dirFiles(fs, dir)
 	if diags.HasErrors() {

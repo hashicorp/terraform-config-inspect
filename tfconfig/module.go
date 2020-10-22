@@ -22,7 +22,8 @@ type Module struct {
 	Diagnostics Diagnostics `json:"diagnostics,omitempty"`
 }
 
-func newModule(path string) *Module {
+// NewModule creates new Module representing Terraform module at the given path
+func NewModule(path string) *Module {
 	return &Module{
 		Path:              path,
 		Variables:         make(map[string]*Variable),
