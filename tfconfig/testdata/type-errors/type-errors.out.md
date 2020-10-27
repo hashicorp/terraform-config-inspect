@@ -33,9 +33,9 @@ Unsuitable value: string required
 
 ## Error: Unsuitable value type
 
-(at `testdata/type-errors/type-errors.tf` line 11)
+(at `testdata/type-errors/type-errors.tf` line 8)
 
-Unsuitable value: string required
+Unsuitable value: a bool is required
 
 ## Error: Unsuitable value type
 
@@ -45,25 +45,31 @@ Unsuitable value: string required
 
 ## Error: Unsuitable value type
 
-(at `testdata/type-errors/type-errors.tf` line 16)
+(at `testdata/type-errors/type-errors.tf` line 13)
+
+Unsuitable value: string required
+
+## Error: Unsuitable value type
+
+(at `testdata/type-errors/type-errors.tf` line 17)
 
 Unsuitable value: string required
 
 ## Error: Invalid provider reference
 
-(at `testdata/type-errors/type-errors.tf` line 20)
+(at `testdata/type-errors/type-errors.tf` line 21)
 
 Provider argument requires a provider name followed by an optional alias, like "aws.foo".
 
 ## Error: Unsuitable value type
 
-(at `testdata/type-errors/type-errors.tf` line 24)
+(at `testdata/type-errors/type-errors.tf` line 25)
 
 Unsuitable value: string required
 
 ## Error: Unsuitable value type
 
-(at `testdata/type-errors/type-errors.tf` line 26)
+(at `testdata/type-errors/type-errors.tf` line 27)
 
 Unsuitable value: string required
 

@@ -5,6 +5,7 @@ variable "foo" {
 
 output "foo" {
   description = ["blah"]
+  sensitive   = "blah"
 }
 
 module "foo" {

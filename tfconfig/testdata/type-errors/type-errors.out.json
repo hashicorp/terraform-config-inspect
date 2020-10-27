@@ -22,10 +22,10 @@
         {
             "severity": "error",
             "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: string required",
+            "detail": "Unsuitable value: a bool is required",
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
-                "line": 11
+                "line": 8
             }
         },
         {
@@ -43,7 +43,16 @@
             "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
-                "line": 16
+                "line": 13
+            }
+        },
+        {
+            "severity": "error",
+            "summary": "Unsuitable value type",
+            "detail": "Unsuitable value: string required",
+            "pos": {
+                "filename": "testdata/type-errors/type-errors.tf",
+                "line": 17
             }
         },
         {
@@ -52,7 +61,7 @@
             "detail": "Provider argument requires a provider name followed by an optional alias, like \"aws.foo\".",
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
-                "line": 20
+                "line": 21
             }
         },
         {
@@ -61,7 +70,7 @@
             "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
-                "line": 24
+                "line": 25
             }
         },
         {
@@ -70,7 +79,7 @@
             "detail": "Unsuitable value: string required",
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
-                "line": 26
+                "line": 27
             }
         }
     ],
@@ -109,7 +118,7 @@
             },
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
-                "line": 19
+                "line": 20
             }
         }
     },
@@ -120,7 +129,7 @@
             "source": "",
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
-                "line": 10
+                "line": 11
             }
         }
     }

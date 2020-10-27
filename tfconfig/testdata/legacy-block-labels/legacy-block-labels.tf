@@ -34,6 +34,7 @@ variable foo {
 
 output foo {
   description = "foo description"
+  sensitive = true
   ignored = 1
 }
 

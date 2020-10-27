@@ -39,6 +39,15 @@
         "filename": "testdata/basics-json/basics.tf.json",
         "line": 14
       }
+    },
+    "C": {
+      "name": "C",
+      "description": "C is sensitive B",
+      "sensitive": true,
+      "pos": {
+        "filename": "testdata/basics-json/basics.tf.json",
+        "line": 18
+      }
     }
   },
   "managed_resources": {
@@ -51,7 +60,7 @@
       },
       "pos": {
         "filename": "testdata/basics-json/basics.tf.json",
-        "line": 21
+        "line": 26
       }
     },
     "null_resource.B": {
@@ -63,7 +72,7 @@
       },
       "pos": {
         "filename": "testdata/basics-json/basics.tf.json",
-        "line": 22
+        "line": 27
       }
     }
   },

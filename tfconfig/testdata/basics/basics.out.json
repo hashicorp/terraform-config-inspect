@@ -22,6 +22,16 @@
         "filename": "testdata/basics/basics.tf",
         "line": 5
       }
+    },
+    "C": {
+      "name": "C",
+      "description": "The C variable",
+      "default": null,
+      "required": true,
+      "pos": {
+        "filename": "testdata/basics/basics.tf",
+        "line": 9
+      }
     }
   },
   "outputs": {
@@ -29,7 +39,7 @@
       "name": "A",
       "pos": {
         "filename": "testdata/basics/basics.tf",
-        "line": 9
+        "line": 13
       }
     },
     "B": {
@@ -37,7 +47,16 @@
       "description": "I am B",
       "pos": {
         "filename": "testdata/basics/basics.tf",
-        "line": 13
+        "line": 17
+      }
+    },
+    "C": {
+      "name": "C",
+      "description": "C is sensitive",
+      "sensitive": true,
+      "pos": {
+        "filename": "testdata/basics/basics.tf",
+        "line": 23
       }
     }
   },
@@ -51,7 +70,7 @@
       },
       "pos": {
         "filename": "testdata/basics/basics.tf",
-        "line": 18
+        "line": 29
       }
     },
     "null_resource.B": {
@@ -63,7 +82,19 @@
       },
       "pos": {
         "filename": "testdata/basics/basics.tf",
-        "line": 19
+        "line": 30
+      }
+    },
+    "null_resource.C": {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "C",
+      "provider": {
+        "name": "null"
+      },
+      "pos": {
+        "filename": "testdata/basics/basics.tf",
+        "line": 31
       }
     }
   },

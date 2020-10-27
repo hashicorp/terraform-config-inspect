@@ -124,6 +124,7 @@ func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 			outputs = outputs.Children()
 			type OutputBlock struct {
 				Description string
+				Sensitive   bool
 			}
 
 			for _, item := range outputs.Items {
@@ -144,6 +145,7 @@ func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 				o := &Output{
 					Name:        name,
 					Description: block.Description,
+					Sensitive:   block.Sensitive,
 					Pos:         sourcePosLegacyHCL(item.Pos(), filename),
 				}
 				if _, exists := mod.Outputs[name]; exists {
