@@ -222,6 +222,21 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				}
 			}
 
+			providerKey := name
+			var alias string
+			if attr, defined := content.Attributes["alias"]; defined {
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &alias)
+				diags = append(diags, valDiags...)
+				if !valDiags.HasErrors() && alias != "" {
+					providerKey = fmt.Sprintf("%s.%s", name, alias)
+				}
+			}
+
+			mod.ProviderConfigs[providerKey] = &ProviderConfig{
+				Name:  name,
+				Alias: alias,
+			}
+
 		case "resource", "data":
 
 			content, _, contentDiags := block.Body.PartialContent(resourceSchema)

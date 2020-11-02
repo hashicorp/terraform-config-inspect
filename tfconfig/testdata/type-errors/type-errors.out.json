@@ -108,6 +108,9 @@
             }
         }
     },
+    "provider_configs": {
+        "foo": {"name": "foo"}
+    },
     "managed_resources": {
         "foo.foo": {
             "mode": "managed",

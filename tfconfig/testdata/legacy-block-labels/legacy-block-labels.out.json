@@ -36,6 +36,10 @@
             }
         }
     },
+    "provider_configs": {
+        "aws": {"name": "aws"},
+        "noversion": {"name": "noversion"}
+    },
     "managed_resources": {
         "null_resource.foo": {
             "mode": "managed",

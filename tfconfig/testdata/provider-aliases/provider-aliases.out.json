@@ -1,0 +1,22 @@
+{
+  "path": "testdata/provider-aliases",
+  "variables": {},
+  "outputs": {},
+  "required_providers": {
+    "bar": {},
+    "baz": {},
+    "empty": {},
+    "foo": {}
+  },
+  "provider_configs": {
+    "bar.yellow": {"name": "bar", "alias": "yellow"},
+    "baz": {"name": "baz"},
+    "empty": {"name": "empty"},
+    "bar": {"name": "bar"},
+    "foo.blue": {"name": "foo", "alias": "blue"},
+    "foo.red": {"name": "foo", "alias": "red"}
+  },
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}
