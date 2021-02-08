@@ -5,6 +5,7 @@
   "required_providers": {
     "bar": {},
     "baz": {},
+    "bleep": {},
     "empty": {},
     "foo": {}
   },

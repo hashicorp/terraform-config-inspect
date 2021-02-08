@@ -1,3 +1,11 @@
+terraform {
+  required_providers {
+    bleep = {
+      configuration_aliases = [ bleep.bloop ]
+    }
+  }
+}
+
 provider "foo" {
   alias = "blue"
 }
