@@ -67,9 +67,9 @@ Provider argument requires a provider name followed by an optional alias, like "
 
 Unsuitable value: string required
 
-## Error: Unsuitable value type
+## Error: Invalid required_providers object
 
 (at `testdata/type-errors/type-errors.tf` line 27)
 
-Unsuitable value: string required
+Required providers entries must be strings or objects.
 

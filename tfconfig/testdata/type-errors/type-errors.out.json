@@ -75,8 +75,8 @@
         },
         {
             "severity": "error",
-            "summary": "Unsuitable value type",
-            "detail": "Unsuitable value: string required",
+            "summary": "Invalid required_providers object",
+            "detail": "Required providers entries must be strings or objects.",
             "pos": {
                 "filename": "testdata/type-errors/type-errors.tf",
                 "line": 27
