@@ -17,8 +17,9 @@ type ProviderRef struct {
 }
 
 type ProviderRequirement struct {
-	Source             string   `json:"source,omitempty"`
-	VersionConstraints []string `json:"version_constraints,omitempty"`
+	Source               string        `json:"source,omitempty"`
+	VersionConstraints   []string      `json:"version_constraints,omitempty"`
+	ConfigurationAliases []ProviderRef `json:"aliases,omitempty"`
 }
 
 func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequirement, hcl.Diagnostics) {
@@ -85,8 +86,8 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequire
 				}
 
 			case "source":
-				source, err := kv.Value.Value(nil)
-				if err != nil || !source.Type().Equals(cty.String) {
+				source, valDiags := kv.Value.Value(nil)
+				if valDiags.HasErrors() || !source.Type().Equals(cty.String) {
 					diags = append(diags, &hcl.Diagnostic{
 						Severity: hcl.DiagError,
 						Summary:  "Unsuitable value type",
@@ -99,6 +100,13 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequire
 				if !source.IsNull() {
 					pr.Source = source.AsString()
 				}
+			case "configuration_aliases":
+				aliases, valDiags := decodeConfigurationAliases(name, kv.Value)
+				if valDiags.HasErrors() {
+					diags = append(diags, valDiags...)
+					continue
+				}
+				pr.ConfigurationAliases = append(pr.ConfigurationAliases, aliases...)
 			}
 
 			reqs[name] = &pr
@@ -106,4 +114,85 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequire
 	}
 
 	return reqs, diags
+}
+
+func decodeConfigurationAliases(localName string, value hcl.Expression) ([]ProviderRef, hcl.Diagnostics) {
+	aliases := make([]ProviderRef, 0)
+	var diags hcl.Diagnostics
+
+	exprs, listDiags := hcl.ExprList(value)
+	if listDiags.HasErrors() {
+		diags = append(diags, listDiags...)
+		return aliases, diags
+	}
+
+	for _, expr := range exprs {
+		traversal, travDiags := hcl.AbsTraversalForExpr(expr)
+		if travDiags.HasErrors() {
+			diags = append(diags, travDiags...)
+			continue
+		}
+
+		ref, cfgDiags := parseProviderRef(traversal)
+		if cfgDiags.HasErrors() {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Invalid configuration_aliases value",
+				Detail:   `Configuration aliases can only contain references to local provider configuration names in the format of provider.alias`,
+				Subject:  value.Range().Ptr(),
+			})
+			continue
+		}
+
+		if ref.Name != localName {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Invalid configuration_aliases value",
+				Detail:   fmt.Sprintf(`Configuration aliases must be prefixed with the provider name. Expected %q, but found %q.`, localName, ref.Name),
+				Subject:  value.Range().Ptr(),
+			})
+			continue
+		}
+
+		aliases = append(aliases, ref)
+	}
+
+	return aliases, diags
+}
+
+func parseProviderRef(traversal hcl.Traversal) (ProviderRef, hcl.Diagnostics) {
+	var diags hcl.Diagnostics
+	ret := ProviderRef{
+		Name: traversal.RootName(),
+	}
+
+	if len(traversal) < 2 {
+		// Just a local name, then.
+		return ret, diags
+	}
+
+	aliasStep := traversal[1]
+	switch ts := aliasStep.(type) {
+	case hcl.TraverseAttr:
+		ret.Alias = ts.Name
+		return ret, diags
+	default:
+		diags = diags.Append(&hcl.Diagnostic{
+			Severity: hcl.DiagError,
+			Summary:  "Invalid provider configuration address",
+			Detail:   "The provider type name must either stand alone or be followed by an alias name separated with a dot.",
+			Subject:  aliasStep.SourceRange().Ptr(),
+		})
+	}
+
+	if len(traversal) > 2 {
+		diags = diags.Append(&hcl.Diagnostic{
+			Severity: hcl.DiagError,
+			Summary:  "Invalid provider configuration address",
+			Detail:   "Extraneous extra operators after provider configuration address.",
+			Subject:  traversal[2:].SourceRange().Ptr(),
+		})
+	}
+
+	return ret, diags
 }
