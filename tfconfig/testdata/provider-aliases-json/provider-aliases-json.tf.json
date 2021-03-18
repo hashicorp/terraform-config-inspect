@@ -1,0 +1,35 @@
+{
+  "terraform": {
+    "required_providers": {
+      "bleep": {
+        "configuration_aliases": [
+          "bleep.bloop"
+        ]
+      }
+    }
+  },
+  "provider": {
+    "foo": [
+      {
+        "alias": "blue"
+      },
+      {
+        "alias": "red"
+      }
+    ],
+    "bar": [
+      {},
+      {
+        "alias": "yellow"
+      }
+    ],
+    "baz": [
+      {}
+    ],
+    "empty": [
+      {
+        "alias": ""
+      }
+    ]
+  }
+}

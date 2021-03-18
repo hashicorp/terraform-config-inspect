@@ -1,5 +1,5 @@
 {
-  "path": "testdata/provider-aliases",
+  "path": "testdata/provider-aliases-json",
   "variables": {},
   "outputs": {},
   "required_providers": {
