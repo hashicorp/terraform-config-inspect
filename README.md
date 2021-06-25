@@ -24,7 +24,7 @@ There are not yet any formal compatibility promises for the Terraform
 configuration file format, so this tool can't yet promise to be compatible
 with unknown future extensions to the format. However, it *should* be capable
 of parsing valid configurations targeting Terraform versions between 0.10
-and 0.15.
+and 1.0.
 
 ## Command Line Tool
 
