@@ -20,11 +20,14 @@ module, diags := tfconfig.LoadModule(dir)
 // ...
 ```
 
-There are not yet any formal compatibility promises for the Terraform
-configuration file format, so this tool can't yet promise to be compatible
-with unknown future extensions to the format. However, it *should* be capable
-of parsing valid configurations targeting Terraform versions between 0.10
-and 1.0.
+Due to the [Terraform v1.0 Compatibility Promises](https://www.terraform.io/docs/language/v1-compatibility-promises.html),
+this library should be able to parse Terraform configurations written in
+the language as defined with Terraform v1.0, although it may not immediately
+expose _new_ additions to the language added during the v1.x series.
+
+This library can also interpret valid Terraform configurations targeting
+Terraform v0.10 through v0.15, although the level of detail returned may
+be lower in older language versions.
 
 ## Command Line Tool
 
