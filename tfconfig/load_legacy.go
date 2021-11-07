@@ -75,6 +75,7 @@ func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 				Type        string `hcl:"type"`
 				Default     interface{}
 				Description string
+				Sensitive   bool     `hcl:"sensitive"`
 				Fields      []string `hcl:",decodedFields"`
 			}
 
@@ -110,6 +111,7 @@ func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 					Description: block.Description,
 					Default:     block.Default,
 					Required:    block.Default == nil,
+					Sensitive:   block.Sensitive,
 					Pos:         sourcePosLegacyHCL(item.Pos(), filename),
 				}
 				if _, exists := mod.Variables[name]; exists {

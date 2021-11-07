@@ -175,6 +175,13 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				v.Required = true
 			}
 
+			if attr, defined := content.Attributes["sensitive"]; defined {
+				var sensitive bool
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &sensitive)
+				diags = append(diags, valDiags...)
+				v.Sensitive = sensitive
+			}
+
 		case "output":
 
 			content, _, contentDiags := block.Body.PartialContent(outputSchema)
