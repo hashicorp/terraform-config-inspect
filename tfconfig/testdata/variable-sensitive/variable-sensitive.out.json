@@ -1,0 +1,44 @@
+{
+  "path": "testdata/variable-sensitive",
+  "required_providers": {
+    "null": {}
+  },
+  "variables": {
+    "A": {
+      "name": "A",
+      "default": "A default",
+      "required": false,
+      "pos": {
+        "filename": "testdata/variable-sensitive/variable-sensitive.tf",
+        "line": 1
+      }
+    },
+    "B": {
+      "name": "B",
+      "default": "B default",
+      "required": false,
+      "sensitive": true,
+      "pos": {
+        "filename": "testdata/variable-sensitive/variable-sensitive.tf",
+        "line": 5
+      }
+    }
+  },
+  "outputs": {},
+  "managed_resources": {
+    "null_resource.A": {
+      "mode": "managed",
+      "type": "null_resource",
+      "name": "A",
+      "provider": {
+        "name": "null"
+      },
+      "pos": {
+        "filename": "testdata/variable-sensitive/variable-sensitive.tf",
+        "line": 10
+      }
+    }
+  },
+  "data_resources": {},
+  "module_calls": {}
+}
