@@ -6,9 +6,9 @@ type Module struct {
 	// Path is the local filesystem directory where the module was loaded from.
 	Path string `json:"path"`
 
-	Variables map[string]*Variable `json:"variables"`
-	Outputs   map[string]*Output   `json:"outputs"`
-
+	Variables         map[string]*Variable            `json:"variables"`
+	Outputs           map[string]*Output              `json:"outputs"`
+	Locals            []*Locals                       `json:"locals,omitempty"`
 	RequiredCore      []string                        `json:"required_core,omitempty"`
 	RequiredProviders map[string]*ProviderRequirement `json:"required_providers"`
 
