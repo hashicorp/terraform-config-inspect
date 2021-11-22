@@ -106,10 +106,10 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			case "locals":
 			attr, blockDiags := block.Body.JustAttributes()
 			diags = append(diags, blockDiags...)
-			for k1, _ := range attr {
+			for k, _ := range attr {
 				l := &Locals{
-					Name:  k1,
-					Value: string(attr[k1].Expr.Range().SliceBytes(file.Bytes)),
+					Name:  k,
+					Value: string(attr[k].Expr.Range().SliceBytes(file.Bytes)),
 				}
 				mod.Locals = append(mod.Locals, l)
 			}
