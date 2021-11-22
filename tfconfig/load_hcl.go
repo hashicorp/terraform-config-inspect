@@ -103,7 +103,18 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				}
 			}
 
-		case "variable":
+			case "locals":
+			attr, blockDiags := block.Body.JustAttributes()
+			diags = append(diags, blockDiags...)
+			for k1, _ := range attr {
+				l := &Locals{
+					Name:  k1,
+					Value: string(attr[k1].Expr.Range().SliceBytes(file.Bytes)),
+				}
+				mod.Locals = append(mod.Locals, l)
+			}
+
+			case "variable":
 			content, _, contentDiags := block.Body.PartialContent(variableSchema)
 			diags = append(diags, contentDiags...)
 
