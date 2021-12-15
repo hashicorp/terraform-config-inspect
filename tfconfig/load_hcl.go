@@ -182,6 +182,35 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				v.Sensitive = sensitive
 			}
 
+			for _, block := range content.Blocks {
+				switch block.Type {
+
+				case "validation":
+					content, _, contentDiags := block.Body.PartialContent(variableValidationSchema)
+					diags = append(diags, contentDiags...)
+					var variableValidation VariableValidation
+
+					if attr, defined := content.Attributes["condition"]; defined {
+						variableValidation.Condition = attr.Expr
+					}
+
+					if attr, defined := content.Attributes["error_message"]; defined {
+						var errorMessage string
+						valDiags := gohcl.DecodeExpression(attr.Expr, nil, &errorMessage)
+						diags = append(diags, valDiags...)
+						variableValidation.ErrorMessage = errorMessage
+					}
+
+					v.Validations = append(v.Validations, variableValidation)
+
+				default:
+					// Should never happen because our cases above should be
+					// exhaustive for our schema.
+					panic(fmt.Errorf("unhandled block type %q", block.Type))
+
+				}
+			}
+
 		case "output":
 
 			content, _, contentDiags := block.Body.PartialContent(outputSchema)

@@ -1,0 +1,49 @@
+{
+    "path": "testdata/variable-validation",
+    "required_providers": {
+      "null": {}
+    },
+    "variables": {
+      "A": {
+        "name": "A",
+        "default": "A default",
+        "required": false,
+        "pos": {
+          "filename": "testdata/variable-validation/variable-validation.tf",
+          "line": 1
+        }
+      },
+      "B": {
+        "name": "B",
+        "default": "B default",
+        "required": false,
+        "pos": {
+          "filename": "testdata/variable-validation/variable-validation.tf",
+          "line": 5
+        },
+        "validations": [
+            {
+                "error_message": "B error message"
+            }
+        ]
+      }
+    },
+    "outputs": {},
+    "managed_resources": {
+      "null_resource.A": {
+        "mode": "managed",
+        "type": "null_resource",
+        "name": "A",
+        "provider": {
+          "name": "null"
+        },
+        "pos": {
+          "filename": "testdata/variable-validation/variable-validation.tf",
+          "line": 13
+        }
+      }
+    },
+    "data_resources": {},
+    "module_calls": {}
+  }
+  

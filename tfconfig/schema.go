@@ -76,6 +76,23 @@ var variableSchema = &hcl.BodySchema{
 			Name: "sensitive",
 		},
 	},
+	Blocks: []hcl.BlockHeaderSchema{
+		{
+			Type:       "validation",
+			LabelNames: nil,
+		},
+	},
+}
+
+var variableValidationSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "condition",
+		},
+		{
+			Name: "error_message",
+		},
+	},
 }
 
 var outputSchema = &hcl.BodySchema{
