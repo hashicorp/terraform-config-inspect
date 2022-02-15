@@ -1,4 +1,4 @@
-module github.com/hashicorp/terraform-config-inspect
+module github.com/jgbastos/terraform-config-inspect
 
 require (
 	github.com/agext/levenshtein v1.2.2 // indirect

@@ -1,5 +1,7 @@
 package tfconfig
 
+import "strings"
+
 // Variable represents a single variable from a Terraform module.
 type Variable struct {
 	Name        string `json:"name"`
@@ -14,5 +16,35 @@ type Variable struct {
 	Required  bool        `json:"required"`
 	Sensitive bool        `json:"sensitive,omitempty"`
 
+	Validation *Validation `json:"validation,omitempty"`
+
 	Pos SourcePos `json:"pos"`
+}
+
+// Validation represents a validation object from a single variable from a Terraform module.
+type Validation struct {
+	Condition    string `json:"condition,omitempty"`
+	ErrorMessage string `json:"error,omitempty"`
+}
+
+type HclValidation struct {
+	Condition    string `hcl:"condition"`
+	ErrorMessage string `hcl:"error_message"`
+}
+
+func Between(value string, a string, b string) string {
+	// Get substring between two strings.
+	posFirst := strings.Index(value, a)
+	if posFirst == -1 {
+		return ""
+	}
+	posLast := strings.Index(value, b)
+	if posLast == -1 {
+		return ""
+	}
+	posFirstAdjusted := posFirst + len(a)
+	if posFirstAdjusted >= posLast {
+		return ""
+	}
+	return value[posFirstAdjusted:posLast]
 }

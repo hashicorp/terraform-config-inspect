@@ -3,11 +3,11 @@ package tfconfig
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/hashicorp/hcl/v2"
 	"strings"
 
 	"github.com/hashicorp/hcl/v2/hclsyntax"
 
-	"github.com/hashicorp/hcl/v2"
 	"github.com/hashicorp/hcl/v2/gohcl"
 	"github.com/hashicorp/hcl/v2/hclparse"
 	ctyjson "github.com/zclconf/go-cty/cty/json"
@@ -111,6 +111,24 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			v := &Variable{
 				Name: name,
 				Pos:  sourcePosHCL(block.DefRange),
+			}
+
+			for _, blockInt := range content.Blocks {
+				v.Validation = &Validation{}
+				contentInt, _, contentDiags := blockInt.Body.PartialContent(variableValidationSchema)
+				diags = append(diags, contentDiags...)
+				if attrInt, defined := contentInt.Attributes["condition"]; defined {
+					var condition string
+					rng := attrInt.Expr.Range()
+					condition = string(rng.SliceBytes(file.Bytes))
+					v.Validation.Condition = strings.Replace(Between(condition, "can(regex(\"", "\","), "\\\\", "\\", -1)
+				}
+				if attrInt, defined := contentInt.Attributes["error_message"]; defined {
+					var errorMessage string
+					valDiags := gohcl.DecodeExpression(attrInt.Expr, nil, &errorMessage)
+					diags = append(diags, valDiags...)
+					v.Validation.ErrorMessage = errorMessage
+				}
 			}
 
 			mod.Variables[name] = v
