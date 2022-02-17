@@ -13,10 +13,12 @@ import (
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
 
-func loadModule(fs FS, dir string) (*Module, Diagnostics) {
-	mod := NewModule(dir)
-	primaryPaths, diags := dirFiles(fs, dir)
+type LoadModuleFileFunc func(file *hcl.File, filename string) hcl.Diagnostics
 
+// LoadModuleFiles invokes the LoadModuleFileFunc function for each file in the module
+// This is useful for any caller that wants to inspect a module's files
+func LoadModuleFiles(fs FS, dir string, loadModuleFile LoadModuleFileFunc) hcl.Diagnostics {
+	primaryPaths, diags := dirFiles(fs, dir)
 	parser := hclparse.NewParser()
 
 	for _, filename := range primaryPaths {
@@ -42,11 +44,20 @@ func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 			continue
 		}
 
-		contentDiags := LoadModuleFromFile(file, mod)
+		contentDiags := loadModuleFile(file, filename)
 		diags = append(diags, contentDiags...)
 	}
 
-	return mod, diagnosticsHCL(diags)
+	return diagnosticsHCL(diags)
+}
+
+func loadModule(fs FS, dir string) (*Module, Diagnostics) {
+	mod := NewModule(dir)
+	diags := LoadModuleFiles(fs, dir, func (file *hcl.File, _ string) hcl.Diagnostics {
+		return diagnosticsHCL(LoadModuleFromFile(file, mod))
+	})
+	
+	return mod, diags
 }
 
 // LoadModuleFromFile reads given file, interprets it and stores in given Module
