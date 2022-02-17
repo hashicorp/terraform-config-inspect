@@ -17,7 +17,15 @@ type LoadModuleFileFunc func(file *hcl.File, filename string) hcl.Diagnostics
 
 // LoadModuleFiles invokes the LoadModuleFileFunc function for each file in the module
 // This is useful for any caller that wants to inspect a module's files
-func LoadModuleFiles(fs FS, dir string, loadModuleFile LoadModuleFileFunc) hcl.Diagnostics {
+// Use IsModuleDir to determine if the directory contains terraform configuration files
+func LoadModuleFiles(dir string, loadModuleFile LoadModuleFileFunc) hcl.Diagnostics {
+	return LoadModuleFilesFromFileSystem(NewOsFs(), dir, loadModuleFile)
+}
+
+// LoadModuleFilesFromFileSystem invokes the LoadModuleFileFunc function for each file in the module
+// This is useful for any caller that wants to inspect a module's files
+// Use IsModuleDir to determine if the directory contains terraform configuration files
+func LoadModuleFilesFromFileSystem(fs FS, dir string, loadModuleFile LoadModuleFileFunc) hcl.Diagnostics {
 	primaryPaths, diags := dirFiles(fs, dir)
 	parser := hclparse.NewParser()
 
@@ -48,15 +56,15 @@ func LoadModuleFiles(fs FS, dir string, loadModuleFile LoadModuleFileFunc) hcl.D
 		diags = append(diags, contentDiags...)
 	}
 
-	return diagnosticsHCL(diags)
+	return diags
 }
 
 func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 	mod := NewModule(dir)
-	diags := LoadModuleFiles(fs, dir, func (file *hcl.File, _ string) hcl.Diagnostics {
-		return diagnosticsHCL(LoadModuleFromFile(file, mod))
-	})
-	
+	diags := diagnosticsHCL(LoadModuleFilesFromFileSystem(fs, dir, func(file *hcl.File, _ string) hcl.Diagnostics {
+		return LoadModuleFromFile(file, mod)
+	}))
+
 	return mod, diags
 }
 
