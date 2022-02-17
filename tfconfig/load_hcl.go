@@ -61,11 +61,11 @@ func LoadModuleFilesFromFileSystem(fs FS, dir string, loadModuleFile LoadModuleF
 
 func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 	mod := NewModule(dir)
-	diags := diagnosticsHCL(LoadModuleFilesFromFileSystem(fs, dir, func(file *hcl.File, _ string) hcl.Diagnostics {
+	diags := LoadModuleFilesFromFileSystem(fs, dir, func(file *hcl.File, _ string) hcl.Diagnostics {
 		return LoadModuleFromFile(file, mod)
-	}))
+	})
 
-	return mod, diags
+	return mod, diagnosticsHCL(diags)
 }
 
 // LoadModuleFromFile reads given file, interprets it and stores in given Module
