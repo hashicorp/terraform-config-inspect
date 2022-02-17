@@ -55,6 +55,13 @@ func IsModuleDirOnFilesystem(fs FS, dir string) bool {
 	return true
 }
 
+// IsOverrideFile checks if the given filename is an override file.
+func IsOverrideFile(baseFilename string) bool {
+	ext := fileExt(baseFilename)
+	baseName := baseFilename[:len(baseFilename)-len(ext)] // strip extension
+	return baseName == "override" || strings.HasSuffix(baseName, "_override")
+}
+
 func (m *Module) init(diags Diagnostics) {
 	// Fill in any additional provider requirements that are implied by
 	// resource configurations, to avoid the caller from needing to apply
@@ -102,11 +109,8 @@ func dirFiles(fs FS, dir string) (primary []string, diags hcl.Diagnostics) {
 			continue
 		}
 
-		baseName := name[:len(name)-len(ext)] // strip extension
-		isOverride := baseName == "override" || strings.HasSuffix(baseName, "_override")
-
 		fullPath := filepath.Join(dir, name)
-		if isOverride {
+		if IsOverrideFile(name) {
 			override = append(override, fullPath)
 		} else {
 			primary = append(primary, fullPath)
