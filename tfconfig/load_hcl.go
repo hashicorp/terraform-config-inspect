@@ -122,6 +122,9 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 					rng := attrInt.Expr.Range()
 					condition = string(rng.SliceBytes(file.Bytes))
 					v.Validation.Condition = strings.Replace(Between(condition, "can(regex(\"", "\","), "\\\\", "\\", -1)
+					if fields := ReturnFields(v.Validation.Condition); len(fields) > 0 {
+						v.Validation.Fields = fields
+					}
 				}
 				if attrInt, defined := contentInt.Attributes["error_message"]; defined {
 					var errorMessage string
