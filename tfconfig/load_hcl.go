@@ -113,27 +113,6 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				Pos:  sourcePosHCL(block.DefRange),
 			}
 
-			for _, blockInt := range content.Blocks {
-				v.Validation = &Validation{}
-				contentInt, _, contentDiags := blockInt.Body.PartialContent(variableValidationSchema)
-				diags = append(diags, contentDiags...)
-				if attrInt, defined := contentInt.Attributes["condition"]; defined {
-					var condition string
-					rng := attrInt.Expr.Range()
-					condition = string(rng.SliceBytes(file.Bytes))
-					v.Validation.Condition = strings.Replace(Between(condition, "can(regex(\"", "\","), "\\\\", "\\", -1)
-					if fields := ReturnFields(v.Validation.Condition); len(fields) > 0 {
-						v.Validation.Fields = fields
-					}
-				}
-				if attrInt, defined := contentInt.Attributes["error_message"]; defined {
-					var errorMessage string
-					valDiags := gohcl.DecodeExpression(attrInt.Expr, nil, &errorMessage)
-					diags = append(diags, valDiags...)
-					v.Validation.ErrorMessage = errorMessage
-				}
-			}
-
 			mod.Variables[name] = v
 
 			if attr, defined := content.Attributes["type"]; defined {
@@ -201,6 +180,27 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &sensitive)
 				diags = append(diags, valDiags...)
 				v.Sensitive = sensitive
+			}
+
+			for _, blockInt := range content.Blocks {
+				v.Validation = &Validation{}
+				contentInt, _, contentDiags := blockInt.Body.PartialContent(variableValidationSchema)
+				diags = append(diags, contentDiags...)
+				if attrInt, defined := contentInt.Attributes["condition"]; defined {
+					var condition string
+					rng := attrInt.Expr.Range()
+					condition = string(rng.SliceBytes(file.Bytes))
+					v.Validation.Condition = strings.Replace(Between(condition, "can(regex(\"", "$\","), "\\\\", "\\", -1) + "$"
+					if fields := ReturnFields(v.Validation.Condition, !strings.Contains(v.Type, "object(")); len(fields) > 0 {
+						v.Validation.Fields = fields
+					}
+				}
+				if attrInt, defined := contentInt.Attributes["error_message"]; defined {
+					var errorMessage string
+					valDiags := gohcl.DecodeExpression(attrInt.Expr, nil, &errorMessage)
+					diags = append(diags, valDiags...)
+					v.Validation.ErrorMessage = errorMessage
+				}
 			}
 
 		case "output":

@@ -53,7 +53,7 @@ func Between(value string, a string, b string) string {
 	return value[posFirstAdjusted:posLast]
 }
 
-func ReturnFields(str string) map[string]string {
+func ReturnFields(str string, isMap bool) map[string]string {
 	validations := map[string]string{}
 	var levelUp []string
 	strSplit := strings.Split(str, "(,)?")
@@ -62,11 +62,11 @@ func ReturnFields(str string) map[string]string {
 		for {
 			if -1 != strings.Index(strSplit[y], "\\{") {
 				strSplitint := strings.Split(strSplit[y], "\\{")
-				levels := strings.SplitAfter(strSplitint[0], "\"")
+				strSplit[y] = strSplitint[len(strSplitint)-1]
+				levels := strings.SplitAfter(strSplitint[len(strSplitint)-2], "\"")
 				if len(levels) > 1 {
 					levelUp = append(levelUp, strings.Replace(levels[1], "\\\"", "", -1))
 				}
-				strSplit[y] = strSplitint[1]
 				continue
 			}
 			break
@@ -74,7 +74,7 @@ func ReturnFields(str string) map[string]string {
 		for {
 			if -1 != strings.Index(strSplit[y], "\\}") {
 				strSplitint := strings.Split(strSplit[y], "\\}")
-				strSplit[y] = strSplitint[0]
+				strSplit[y] = strSplitint[len(strSplitint)-2]
 				if len(levelUp) > 0 {
 					levelUp = levelUp[:len(levelUp)-1]
 				}
@@ -92,9 +92,12 @@ func ReturnFields(str string) map[string]string {
 			_, err := regexp.Compile("^" + strings.Replace(lastSplit[3], "\"", "", -1) + "$")
 			if nil == err {
 				if len(levelUp) > 0 {
-					fName = strings.Join(levelUp, ":") + ":" + strings.Replace(lastSplit[1], "\\\"", "", -1)
+					fName = strings.Join(levelUp, "__") + "__" + strings.Replace(lastSplit[1], "\\\"", "", -1)
 				} else {
 					fName = strings.Replace(lastSplit[1], "\\\"", "", -1)
+				}
+				if isMap {
+					fName = "mapValue"
 				}
 				validations[fName] = "^" + strings.Replace(lastSplit[3], "\\\"", "", -1) + "$"
 				break
@@ -113,9 +116,12 @@ func ReturnFields(str string) map[string]string {
 		_, err := regexp.Compile("^" + strings.Replace(numbSplit[1], "\"", "", -1) + "$")
 		if nil == err {
 			if len(levelUp) > 0 {
-				fName = strings.Join(levelUp, ":") + ":" + strings.Replace(lastSplit[1], "\\\"", "", -1)
+				fName = strings.Join(levelUp, "__") + "__" + strings.Replace(lastSplit[1], "\\\"", "", -1)
 			} else {
 				fName = strings.Replace(strSplit[1], "\\\"", "", -1)
+			}
+			if isMap {
+				fName = "mapValue"
 			}
 			validations[fName] = "^" + strings.Replace(numbSplit[1], "\\\"", "", -1) + "$"
 			continue
