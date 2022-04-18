@@ -7,7 +7,7 @@ to be broadly compatible with modules written for many different versions of
 Terraform.
 
 ```
-$ go get github.com/hashicorp/terraform-config-inspect
+$ go install github.com/hashicorp/terraform-config-inspect@latest
 ```
 
 ```go
