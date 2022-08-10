@@ -9,7 +9,7 @@ Provider Requirements:
 * `B` (required): The B variable
 * `C` (required): The C variable
 
-## Output Values
+## Outputs
 * `A`
 * `B`: I am B
 * `C`: C is sensitive

@@ -12,7 +12,7 @@ Provider Requirements:
 ## Input Variables
 * `foo` (required): true
 
-## Output Values
+## Outputs
 * `foo`: true
 
 ## Managed Resources

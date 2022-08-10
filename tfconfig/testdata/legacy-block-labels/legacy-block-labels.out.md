@@ -13,7 +13,7 @@ Provider Requirements:
 ## Input Variables
 * `foo` (default `"foo default"`): foo description
 
-## Output Values
+## Outputs
 * `foo`: foo description
 
 ## Managed Resources

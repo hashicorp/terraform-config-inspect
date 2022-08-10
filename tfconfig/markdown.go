@@ -62,7 +62,7 @@ Provider Requirements:
 
 {{- if .Outputs}}
 
-## Output Values
+## Outputs
 {{- range .Outputs }}
 * {{ tt .Name }}{{ if .Description}}: {{ .Description }}{{ end }}
 {{- end}}{{end}}

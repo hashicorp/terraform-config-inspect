@@ -49,7 +49,7 @@ Provider Requirements:
 * `a` (default `"a default"`)
 * `b` (required): The b variable
 
-## Output Values
+## Outputs
 * `a`
 * `b`: I am B
 

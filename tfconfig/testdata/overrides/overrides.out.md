@@ -9,7 +9,7 @@ Provider Requirements:
 * `B` (required): The B variable
 * `C` (required): An entirely new variable C
 
-## Output Values
+## Outputs
 * `A`: I am an overridden output!
 * `B`: I am B
 

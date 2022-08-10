@@ -8,7 +8,7 @@ Provider Requirements:
 ## Input Variables
 * `foo` (required)
 
-## Output Values
+## Outputs
 * `foo`
 
 ## Managed Resources
