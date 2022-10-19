@@ -3,7 +3,7 @@ version: 2.1
 executors:
   go:
     docker:
-      - image: docker.mirror.hashicorp.services/cimg/go:1.17
+      - image: docker.mirror.hashicorp.services/cimg/go:1.18
 
 jobs:
   test:
