@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 # Although we never documented it as being good style, the legacy HCL parser
 # allowed block labels to be unquoted if they were valid identifiers.
 #

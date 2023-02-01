@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package tfconfig
 
 // ModuleCall represents a "module" block within a module. That is, a

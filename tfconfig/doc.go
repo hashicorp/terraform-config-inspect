@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // Package tfconfig is a helper library that does careful, shallow parsing of
 // Terraform modules to provide access to high-level metadata while
 // remaining broadly compatible with configurations targeting various
