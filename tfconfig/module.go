@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 package tfconfig
 
 // Module is the top-level type representing a parsed and processed Terraform
