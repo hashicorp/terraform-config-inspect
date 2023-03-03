@@ -60,7 +60,11 @@ Provider Requirements:
 ## Input Variables
 {{- range .Variables }}
 * {{ tt .Name }}{{ if .Required }} (required){{else}} (default {{ json .Default | tt }}){{end}}
-{{- if .Description}}: {{ .Description }}{{ end }}
+{{- if .Description}}: {{ .Description }}{{- end}}
+{{- if .Validation}}  
+  Validation error messages  {{- range .Validation}}
+  * {{ tt . }}
+{{- end}}{{end}}
 {{- end}}{{end}}
 
 {{- if .Outputs}}

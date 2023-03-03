@@ -1,0 +1,50 @@
+{
+  "path": "tfconfig/testdata/variable-validation",
+  "variables": {
+    "variable_with_no_validation": {
+      "name": "variable_with_no_validation",
+      "type": "string",
+      "description": "This variable has no validation",
+      "default": "",
+      "required": false,
+      "pos": {
+        "filename": "tfconfig/testdata/variable-validation/variable-validation.tf",
+        "line": 1
+      }
+    },
+    "variable_with_one_validation": {
+      "name": "variable_with_one_validation",
+      "type": "string",
+      "description": "This variable has one validation",
+      "validation": [
+        "var.variable_with_one_validation must be empty or 10 characters long."
+      ],
+      "default": "",
+      "required": false,
+      "pos": {
+        "filename": "tfconfig/testdata/variable-validation/variable-validation.tf",
+        "line": 7
+      }
+    },
+    "variable_with_two_validations": {
+      "name": "variable_with_two_validations",
+      "type": "string",
+      "description": "This variable has two validations",
+      "validation": [
+        "var.variable_with_two_validations must be 10 characters long.",
+        "var.variable_with_two_validations must start with 'magic'."
+      ],
+      "default": null,
+      "required": true,
+      "pos": {
+        "filename": "tfconfig/testdata/variable-validation/variable-validation.tf",
+        "line": 18
+      }
+    }
+  },
+  "outputs": {},
+  "required_providers": {},
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}

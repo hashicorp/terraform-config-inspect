@@ -145,7 +145,7 @@ For that reason, **we cannot accept external PRs for this codebase that add supp
 
 Furthermore, we consider this package feature-complete; if there is a feature
 you wish to see added, please open a GitHub issue first so we can discuss the
-feasability and design before submitting a pull request. We are unlikely to
+feasibility and design before submitting a pull request. We are unlikely to
 accept PRs that add features without discussion first.
 
 We would be happy to review PRs to fix bugs in existing functionality or to

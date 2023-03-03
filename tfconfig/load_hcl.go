@@ -185,6 +185,22 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				v.Sensitive = sensitive
 			}
 
+			for _, block := range content.Blocks {
+				switch block.Type {
+
+				case "validation":
+					content, _, contentDiags := block.Body.PartialContent(validationSchema)
+					diags = append(diags, contentDiags...)
+
+					if attr, defined := content.Attributes["error_message"]; defined {
+						var errorMessage string
+						valDiags := gohcl.DecodeExpression(attr.Expr, nil, &errorMessage)
+						diags = append(diags, valDiags...)
+						v.Validation = append(v.Validation, errorMessage)
+					}
+				}
+			}
+
 		case "output":
 
 			content, _, contentDiags := block.Body.PartialContent(outputSchema)
