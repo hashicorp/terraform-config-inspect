@@ -163,6 +163,24 @@ func decodeConfigurationAliases(localName string, value hcl.Expression) ([]Provi
 	return aliases, diags
 }
 
+func decodeProviderRef(expr hcl.Expression) (*ProviderRef, hcl.Diagnostics) {
+	var diags hcl.Diagnostics
+
+	var shimDiags hcl.Diagnostics
+	expr, shimDiags = shimTraversalInString(expr, false)
+	diags = append(diags, shimDiags...)
+
+	traversal, tDiags := hcl.AbsTraversalForExpr(expr)
+	diags = append(diags, tDiags...)
+
+	ret, parseDiags := parseProviderRef(traversal)
+	if !parseDiags.HasErrors() {
+		diags = append(diags, parseDiags...)
+	}
+
+	return &ret, diags
+}
+
 func parseProviderRef(traversal hcl.Traversal) (ProviderRef, hcl.Diagnostics) {
 	var diags hcl.Diagnostics
 	ret := ProviderRef{
@@ -198,4 +216,14 @@ func parseProviderRef(traversal hcl.Traversal) (ProviderRef, hcl.Diagnostics) {
 	}
 
 	return ret, diags
+}
+
+func (r *ProviderRef) String() string {
+	if r == nil {
+		return "<nil>"
+	}
+	if r.Alias != "" {
+		return fmt.Sprintf("%s.%s", r.Name, r.Alias)
+	}
+	return r.Name
 }

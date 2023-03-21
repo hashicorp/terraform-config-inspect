@@ -11,4 +11,13 @@ type ModuleCall struct {
 	Version string `json:"version,omitempty"`
 
 	Pos SourcePos `json:"pos"`
+
+	Providers []PassedProviderConfig `json:"providers,omitempty"`
+}
+
+// PassedProviderConfig represents a provider config explicitly passed down to
+// a child module, possibly giving it a new local address in the process.
+type PassedProviderConfig struct {
+	InChild  *ProviderRef `json:"in_child"`
+	InParent *ProviderRef `json:"in_parent"`
 }

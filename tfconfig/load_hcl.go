@@ -363,6 +363,39 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				mc.Version = version
 			}
 
+			if attr, exists := content.Attributes["providers"]; exists {
+				seen := make(map[string]hcl.Range)
+				pairs, pDiags := hcl.ExprMap(attr.Expr)
+				diags = append(diags, pDiags...)
+				for _, pair := range pairs {
+					key, keyDiags := decodeProviderRef(pair.Key)
+					diags = append(diags, keyDiags...)
+					value, valueDiags := decodeProviderRef(pair.Value)
+					diags = append(diags, valueDiags...)
+					if keyDiags.HasErrors() || valueDiags.HasErrors() {
+						continue
+					}
+
+					matchKey := key.String()
+					if prev, exists := seen[matchKey]; exists {
+						diags = append(diags, &hcl.Diagnostic{
+							Severity: hcl.DiagError,
+							Summary:  "Duplicate provider address",
+							Detail:   fmt.Sprintf("A provider configuration was already passed to %s at %s. Each child provider configuration can be assigned only once.", matchKey, prev),
+							Subject:  pair.Value.Range().Ptr(),
+						})
+						continue
+					}
+
+					rng := hcl.RangeBetween(pair.Key.Range(), pair.Value.Range())
+					seen[matchKey] = rng
+					mc.Providers = append(mc.Providers, PassedProviderConfig{
+						InChild:  key,
+						InParent: value,
+					})
+				}
+			}
+
 		default:
 			// Should never happen because our cases above should be
 			// exhaustive for our schema.
