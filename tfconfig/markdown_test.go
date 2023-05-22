@@ -5,11 +5,10 @@ package tfconfig
 
 import (
 	"bytes"
+	"github.com/google/go-cmp/cmp"
 	"io/ioutil"
 	"path/filepath"
 	"testing"
-
-	"github.com/go-test/deep"
 )
 
 func TestRenderMarkdown(t *testing.T) {
@@ -46,10 +45,8 @@ func TestRenderMarkdown(t *testing.T) {
 				t.Fatal(err)
 			}
 
-			if diff := deep.Equal(buf.String(), string(expected)); diff != nil {
-				for _, problem := range diff {
-					t.Errorf("%s", problem)
-				}
+			if diff := cmp.Diff(buf.String(), string(expected)); len(diff) > 0 {
+				t.Errorf("got:\n%s\nwant:\n%s\ndiff:\n%s", buf.String(), expected, diff)
 			}
 		})
 	}

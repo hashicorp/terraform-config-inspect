@@ -1,0 +1,52 @@
+{
+  "managed_resources": {},
+  "data_resources": {
+    "data.external.foo": {
+      "mode": "data",
+      "name": "foo",
+      "pos": {
+        "filename": "testdata/checks/checks.tf",
+        "line": 2
+      },
+      "provider": {
+        "name": "external"
+      },
+      "type": "external"
+    }
+  },
+  "module_calls": {},
+  "outputs": {},
+  "path": "testdata/checks",
+  "required_providers": {
+    "external": {}
+  },
+  "variables": {},
+  "checks": {
+    "external": {
+      "name": "external",
+      "pos": {
+        "filename": "testdata/checks/checks.tf",
+        "line": 4
+      }
+    },
+    "internal": {
+      "name": "internal",
+      "data_resource": {
+        "mode": "data",
+        "name": "bar",
+        "pos": {
+          "filename": "testdata/checks/checks.tf",
+          "line": 12
+        },
+        "provider": {
+          "name": "external"
+        },
+        "type": "external"
+      },
+      "pos": {
+        "filename": "testdata/checks/checks.tf",
+        "line": 11
+      }
+    }
+  }
+}

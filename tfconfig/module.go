@@ -19,6 +19,7 @@ type Module struct {
 	ManagedResources map[string]*Resource       `json:"managed_resources"`
 	DataResources    map[string]*Resource       `json:"data_resources"`
 	ModuleCalls      map[string]*ModuleCall     `json:"module_calls"`
+	Checks           map[string]*Check          `json:"checks"`
 
 	// Diagnostics records any errors and warnings that were detected during
 	// loading, primarily for inclusion in serialized forms of the module
@@ -43,5 +44,6 @@ func NewModule(path string) *Module {
 		ManagedResources:  make(map[string]*Resource),
 		DataResources:     make(map[string]*Resource),
 		ModuleCalls:       make(map[string]*ModuleCall),
+		Checks:            make(map[string]*Check),
 	}
 }

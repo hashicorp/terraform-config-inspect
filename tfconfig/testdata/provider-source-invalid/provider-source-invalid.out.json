@@ -20,6 +20,7 @@
     "managed_resources": {},
     "data_resources": {},
     "module_calls": {},
+    "checks": {},
     "diagnostics": [
         {
             "severity": "error",

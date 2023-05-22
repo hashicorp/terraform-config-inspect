@@ -249,81 +249,14 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 
 		case "resource", "data":
 
-			content, _, contentDiags := block.Body.PartialContent(resourceSchema)
-			diags = append(diags, contentDiags...)
+			resource, resourceDiags := LoadResourceFromBlock(block)
+			diags = append(diags, resourceDiags...)
 
-			typeName := block.Labels[0]
-			name := block.Labels[1]
-
-			r := &Resource{
-				Type: typeName,
-				Name: name,
-				Pos:  sourcePosHCL(block.DefRange),
-			}
-
-			var resourcesMap map[string]*Resource
-
-			switch block.Type {
-			case "resource":
-				r.Mode = ManagedResourceMode
-				resourcesMap = mod.ManagedResources
-			case "data":
-				r.Mode = DataResourceMode
-				resourcesMap = mod.DataResources
-			}
-
-			key := r.MapKey()
-
-			resourcesMap[key] = r
-
-			if attr, defined := content.Attributes["provider"]; defined {
-				// New style here is to provide this as a naked traversal
-				// expression, but we also support quoted references for
-				// older configurations that predated this convention.
-				traversal, travDiags := hcl.AbsTraversalForExpr(attr.Expr)
-				if travDiags.HasErrors() {
-					traversal = nil // in case we got any partial results
-
-					// Fall back on trying to parse as a string
-					var travStr string
-					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &travStr)
-					if !valDiags.HasErrors() {
-						var strDiags hcl.Diagnostics
-						traversal, strDiags = hclsyntax.ParseTraversalAbs([]byte(travStr), "", hcl.Pos{})
-						if strDiags.HasErrors() {
-							traversal = nil
-						}
-					}
-				}
-
-				// If we get out here with a nil traversal then we didn't
-				// succeed in processing the input.
-				if len(traversal) > 0 {
-					providerName := traversal.RootName()
-					alias := ""
-					if len(traversal) > 1 {
-						if getAttr, ok := traversal[1].(hcl.TraverseAttr); ok {
-							alias = getAttr.Name
-						}
-					}
-					r.Provider = ProviderRef{
-						Name:  providerName,
-						Alias: alias,
-					}
-				} else {
-					diags = append(diags, &hcl.Diagnostic{
-						Severity: hcl.DiagError,
-						Summary:  "Invalid provider reference",
-						Detail:   "Provider argument requires a provider name followed by an optional alias, like \"aws.foo\".",
-						Subject:  attr.Expr.Range().Ptr(),
-					})
-				}
-			} else {
-				// If provider _isn't_ set then we'll infer it from the
-				// resource type.
-				r.Provider = ProviderRef{
-					Name: resourceTypeDefaultProviderName(r.Type),
-				}
+			switch resource.Mode {
+			case ManagedResourceMode:
+				mod.ManagedResources[resource.MapKey()] = resource
+			case DataResourceMode:
+				mod.DataResources[resource.MapKey()] = resource
 			}
 
 		case "module":
@@ -363,6 +296,40 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				mc.Version = version
 			}
 
+		case "check":
+			content, _, contentDiags := block.Body.PartialContent(checkSchema)
+			diags = append(diags, contentDiags...)
+
+			name := block.Labels[0]
+			check := &Check{
+				Name: name,
+				Pos:  sourcePosHCL(block.DefRange),
+			}
+
+			mod.Checks[name] = check
+
+			var dataDefRange *hcl.Range
+
+			for _, child := range content.Blocks {
+				switch child.Type {
+				case "data":
+					if check.DataResource != nil {
+						diags = append(diags, &hcl.Diagnostic{
+							Severity: hcl.DiagError,
+							Summary:  "Multiple data resource blocks",
+							Detail:   fmt.Sprintf("This check block already has a data resource defined at %s.", dataDefRange),
+							Subject:  child.DefRange.Ptr(),
+						})
+						continue
+					}
+
+					resource, resourceDiags := LoadResourceFromBlock(child)
+					diags = append(diags, resourceDiags...)
+					check.DataResource = resource
+					dataDefRange = child.DefRange.Ptr()
+				}
+			}
+
 		default:
 			// Should never happen because our cases above should be
 			// exhaustive for our schema.
@@ -371,4 +338,75 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 	}
 
 	return diags
+}
+
+func LoadResourceFromBlock(block *hcl.Block) (*Resource, hcl.Diagnostics) {
+	var diags hcl.Diagnostics
+
+	content, _, contentDiags := block.Body.PartialContent(resourceSchema)
+	diags = append(diags, contentDiags...)
+
+	r := &Resource{
+		Type: block.Labels[0],
+		Name: block.Labels[1],
+		Pos:  sourcePosHCL(block.DefRange),
+	}
+
+	switch block.Type {
+	case "resource":
+		r.Mode = ManagedResourceMode
+	case "data":
+		r.Mode = DataResourceMode
+	}
+
+	if attr, defined := content.Attributes["provider"]; defined {
+		// New style here is to provide this as a naked traversal
+		// expression, but we also support quoted references for
+		// older configurations that predated this convention.
+		traversal, travDiags := hcl.AbsTraversalForExpr(attr.Expr)
+		if travDiags.HasErrors() {
+			traversal = nil // in case we got any partial results
+
+			// Fall back on trying to parse as a string
+			var travStr string
+			valDiags := gohcl.DecodeExpression(attr.Expr, nil, &travStr)
+			if !valDiags.HasErrors() {
+				var strDiags hcl.Diagnostics
+				traversal, strDiags = hclsyntax.ParseTraversalAbs([]byte(travStr), "", hcl.Pos{})
+				if strDiags.HasErrors() {
+					traversal = nil
+				}
+			}
+		}
+
+		// If we get out here with a nil traversal then we didn't
+		// succeed in processing the input.
+		if len(traversal) > 0 {
+			providerName := traversal.RootName()
+			alias := ""
+			if len(traversal) > 1 {
+				if getAttr, ok := traversal[1].(hcl.TraverseAttr); ok {
+					alias = getAttr.Name
+				}
+			}
+			r.Provider = ProviderRef{
+				Name:  providerName,
+				Alias: alias,
+			}
+		} else {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Invalid provider reference",
+				Detail:   "Provider argument requires a provider name followed by an optional alias, like \"aws.foo\".",
+				Subject:  attr.Expr.Range().Ptr(),
+			})
+		}
+	} else {
+		// If provider _isn't_ set then we'll infer it from the
+		// resource type.
+		r.Provider = ProviderRef{
+			Name: resourceTypeDefaultProviderName(r.Type),
+		}
+	}
+	return r, diags
 }

@@ -99,5 +99,6 @@
     }
   },
   "data_resources": {},
-  "module_calls": {}
+  "module_calls": {},
+  "checks": {}
 }
