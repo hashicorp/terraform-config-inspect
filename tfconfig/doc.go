@@ -6,7 +6,7 @@
 // remaining broadly compatible with configurations targeting various
 // different Terraform versions.
 //
-// This packge focuses on describing top-level objects only, and in particular
+// This package focuses on describing top-level objects only, and in particular
 // does not attempt any sort of processing that would require access to plugins.
 // Currently it allows callers to extract high-level information about
 // variables, outputs, resource blocks, provider dependencies, and Terraform
