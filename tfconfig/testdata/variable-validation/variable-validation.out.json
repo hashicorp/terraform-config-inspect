@@ -1,5 +1,5 @@
 {
-  "path": "tfconfig/testdata/variable-validation",
+  "path": "testdata/variable-validation",
   "variables": {
     "variable_with_no_validation": {
       "name": "variable_with_no_validation",
@@ -8,7 +8,7 @@
       "default": "",
       "required": false,
       "pos": {
-        "filename": "tfconfig/testdata/variable-validation/variable-validation.tf",
+        "filename": "testdata/variable-validation/variable-validation.tf",
         "line": 1
       }
     },
@@ -22,7 +22,7 @@
       "default": "",
       "required": false,
       "pos": {
-        "filename": "tfconfig/testdata/variable-validation/variable-validation.tf",
+        "filename": "testdata/variable-validation/variable-validation.tf",
         "line": 7
       }
     },
@@ -37,7 +37,7 @@
       "default": null,
       "required": true,
       "pos": {
-        "filename": "tfconfig/testdata/variable-validation/variable-validation.tf",
+        "filename": "testdata/variable-validation/variable-validation.tf",
         "line": 18
       }
     }

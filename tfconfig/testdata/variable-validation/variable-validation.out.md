@@ -1,5 +1,5 @@
 
-# Module `tfconfig/testdata/variable-validation`
+# Module `testdata/variable-validation`
 
 ## Input Variables
 * `variable_with_no_validation` (default `""`): This variable has no validation
