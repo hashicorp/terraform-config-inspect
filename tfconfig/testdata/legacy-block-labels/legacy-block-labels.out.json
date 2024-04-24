@@ -13,6 +13,9 @@
         "external": {},
         "noversion": {}
     },
+    "backend": {
+        "type": "s3"
+    },
     "variables": {
         "foo": {
             "name": "foo",

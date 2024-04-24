@@ -53,6 +53,8 @@ func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 			type TerraformBlock struct {
 				RequiredVersion   string      `hcl:"required_version"`
 				RequiredProviders interface{} `hcl:"required_providers"`
+				Backend           interface{} `hcl:"backend"`
+				Cloud             interface{} `hcl:"cloud"`
 				Fields            []string    `hcl:",decodedFields"`
 			}
 			var block TerraformBlock
@@ -64,6 +66,19 @@ func loadModuleLegacyHCL(fs FS, dir string) (*Module, Diagnostics) {
 			for _, field := range block.Fields {
 				if field == "RequiredProviders" {
 					return nil, diagnosticsErrorf("terraform.required_providers must not exist")
+				}
+			}
+
+			if block.Backend != nil {
+				node := item.Val.(*legacyast.ObjectType)
+				if len(node.List.Items[0].Keys) == 2 {
+					mod.Backend = &Backend{
+						Type: node.List.Items[0].Keys[1].Token.Value().(string),
+					}
+				}
+			} else if block.Cloud != nil {
+				mod.Backend = &Backend{
+					Type: "cloud",
 				}
 			}
 

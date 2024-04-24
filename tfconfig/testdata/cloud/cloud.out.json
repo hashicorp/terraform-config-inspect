@@ -1,0 +1,12 @@
+{
+  "path": "testdata/cloud",
+  "backend": {
+    "type": "cloud"
+  },
+  "variables": {},
+  "outputs": {},
+  "required_providers": {},
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}

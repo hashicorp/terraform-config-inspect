@@ -1,0 +1,12 @@
+{
+  "path": "testdata/backend-s3",
+  "backend": {
+    "type": "s3"
+  },
+  "variables": {},
+  "outputs": {},
+  "required_providers": {},
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}

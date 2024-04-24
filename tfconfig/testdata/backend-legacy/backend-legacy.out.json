@@ -1,0 +1,12 @@
+{
+  "path": "testdata/backend-legacy",
+  "backend": {
+    "type": "manta"
+  },
+  "variables": {},
+  "outputs": {},
+  "required_providers": {},
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}

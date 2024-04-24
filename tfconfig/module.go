@@ -20,6 +20,12 @@ type Module struct {
 	DataResources    map[string]*Resource       `json:"data_resources"`
 	ModuleCalls      map[string]*ModuleCall     `json:"module_calls"`
 
+	// Backend only appears in the root module, if at all. It won't be
+	// possible to tell if the backend config is the implied "local" backend
+	// or if the module is not a root module. If nil, no backend or cloud
+	// block was seen.
+	Backend *Backend `json:"backend,omitempty"`
+
 	// Diagnostics records any errors and warnings that were detected during
 	// loading, primarily for inclusion in serialized forms of the module
 	// since this slice is also returned as a second argument from LoadModule.
@@ -30,6 +36,13 @@ type Module struct {
 type ProviderConfig struct {
 	Name  string `json:"name"`
 	Alias string `json:"alias,omitempty"`
+}
+
+// Backend represents either a backend block or cloud block in the configuration
+type Backend struct {
+	// Type is the type label of the backend, or "cloud" for cloud block,
+	// which is also classified as a backend.
+	Type string `json:"type"`
 }
 
 // NewModule creates new Module representing Terraform module at the given path

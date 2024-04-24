@@ -10,6 +10,8 @@ Provider Requirements:
 * **notnull:** (any version)
 * **noversion:** (any version)
 
+Backend: s3
+
 ## Input Variables
 * `foo` (default `"foo default"`): foo description
 

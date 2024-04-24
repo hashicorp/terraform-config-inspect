@@ -53,7 +53,9 @@ Core Version Constraints:
 Provider Requirements:
 {{- range $name, $req := .RequiredProviders }}
 * **{{ $name }}{{ if $req.Source }} ({{ $req.Source | tt }}){{ end }}:** {{ if $req.VersionConstraints }}{{ commas $req.VersionConstraints | tt }}{{ else }}(any version){{ end }}
-{{- end}}{{end}}
+{{- end}}{{end}}{{ if .Backend}}
+
+Backend: {{ .Backend.Type }}{{end}}
 
 {{- if .Variables}}
 
