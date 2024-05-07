@@ -1,7 +1,21 @@
 version: 2
 
 updates:
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: github-actions
+    directory: /
     schedule:
-      interval: "daily"
+      interval: monthly
+    labels:
+      - dependencies
+      - automated
+    # only update HashiCorp actions, external actions managed by TSCCR
+    allow:
+      - dependency-name: hashicorp/*
+    groups:
+      github-actions-breaking:
+        update-types:
+          - major
+      github-actions-backward-compatible:
+        update-types:
+          - minor
+          - patch
