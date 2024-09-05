@@ -11,7 +11,6 @@ terraform {
   required_version = ">= 0.11.0"
 
   backend "s3" {
-    # This is ignored but included to make sure we do ignore it successfully
     foo = "bar"
   }
   ignored = 1

@@ -1,0 +1,16 @@
+{
+  "path": "testdata/backend",
+  "backend": {
+    "type": "s3",
+    "pos": {
+      "filename": "testdata/backend/backend.tf",
+      "line": 1
+    }
+  },
+  "required_providers": {},
+  "variables": {},
+  "outputs": {},
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}

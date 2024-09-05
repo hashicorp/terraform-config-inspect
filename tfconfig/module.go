@@ -14,6 +14,7 @@ type Module struct {
 
 	RequiredCore      []string                        `json:"required_core,omitempty"`
 	RequiredProviders map[string]*ProviderRequirement `json:"required_providers"`
+	Backend           *Backend                        `json:"backend,omitempty"`
 
 	ProviderConfigs  map[string]*ProviderConfig `json:"provider_configs,omitempty"`
 	ManagedResources map[string]*Resource       `json:"managed_resources"`
