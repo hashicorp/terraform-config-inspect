@@ -103,6 +103,20 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 							mod.RequiredProviders[name].VersionConstraints = append(mod.RequiredProviders[name].VersionConstraints, req.VersionConstraints...)
 						}
 					}
+				case "backend":
+					backend, backendDiags := decodeBackendBlock(innerBlock)
+					diags = append(diags, backendDiags...)
+					if mod.Backend == nil {
+						backend.Pos = sourcePosHCL(block.DefRange)
+						mod.Backend = backend
+					} else {
+						diags = append(diags, &hcl.Diagnostic{
+							Severity: hcl.DiagError,
+							Summary:  "Multiple backends configured",
+							Detail:   fmt.Sprintf("Found multiple backend configurations: %s, %s", mod.Backend.Type, backend.Type),
+							Subject:  &innerBlock.DefRange,
+						})
+					}
 				}
 			}
 

@@ -13,6 +13,13 @@
         "external": {},
         "noversion": {}
     },
+    "backend": {
+        "type": "s3",
+        "pos": {
+            "filename": "testdata/legacy-block-labels/legacy-block-labels.tf",
+            "line": 10
+        }
+    },
     "variables": {
         "foo": {
             "name": "foo",
@@ -21,7 +28,7 @@
             "required": false,
             "pos": {
                 "filename": "testdata/legacy-block-labels/legacy-block-labels.tf",
-                "line": 29
+                "line": 28
             }
         }
     },
@@ -32,7 +39,7 @@
             "sensitive": true,
             "pos": {
                 "filename": "testdata/legacy-block-labels/legacy-block-labels.tf",
-                "line": 35
+                "line": 34
             }
         }
     },
@@ -51,7 +58,7 @@
             },
             "pos": {
                 "filename": "testdata/legacy-block-labels/legacy-block-labels.tf",
-                "line": 41
+                "line": 40
             }
         }
     },
@@ -65,7 +72,7 @@
             },
             "pos": {
                 "filename": "testdata/legacy-block-labels/legacy-block-labels.tf",
-                "line": 46
+                "line": 45
             }
         }
     },
@@ -76,7 +83,7 @@
             "version": "1.2.3",
             "pos": {
                 "filename": "testdata/legacy-block-labels/legacy-block-labels.tf",
-                "line": 50
+                "line": 49
             }
         }
     }
