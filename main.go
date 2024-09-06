@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/hashicorp/terraform-config-inspect/tfconfig"
+	"github.com/massdriver-cloud/terraform-config-inspect/tfconfig"
 	flag "github.com/spf13/pflag"
 )
 

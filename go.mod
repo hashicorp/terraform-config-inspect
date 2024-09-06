@@ -1,4 +1,4 @@
-module github.com/hashicorp/terraform-config-inspect
+module github.com/massdriver-cloud/terraform-config-inspect
 
 require (
 	github.com/go-test/deep v1.0.3
