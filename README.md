@@ -7,11 +7,11 @@ to be broadly compatible with modules written for many different versions of
 Terraform.
 
 ```
-$ go install github.com/hashicorp/terraform-config-inspect@latest
+$ go install github.com/massdriver-cloud/terraform-config-inspect@latest
 ```
 
 ```go
-import "github.com/hashicorp/terraform-config-inspect/tfconfig"
+import "github.com/massdriver-cloud/terraform-config-inspect/tfconfig"
 
 // ...
 
