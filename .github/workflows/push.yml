@@ -51,3 +51,14 @@ jobs:
             git status --porcelain
             exit 1
           fi
+
+  container_build:
+    name: "build container image"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Fetch source code"
+        uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332 # v4.1.7
+      - name: "Build container image"
+        run: |
+          docker build --output type=docker -t terraform-config-inspect:ci-${{ github.run_id }}-${{ github.run_number }} -f build/Dockerfile .
