@@ -74,3 +74,10 @@ func TestLoadModuleFromFilesystem(t *testing.T) {
 		return module
 	})
 }
+
+func TestLoadStack(t *testing.T) {
+	testLoadHelper(t, "testdata-stack", func(path string) interface{} {
+		stack, _ := LoadStack(path)
+		return stack
+	})
+}

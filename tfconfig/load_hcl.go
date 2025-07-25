@@ -52,6 +52,44 @@ func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 	return mod, diagnosticsHCL(diags)
 }
 
+func LoadStack(dir string) (*Stack, Diagnostics) {
+	stack := NewStack(dir)
+	parser := hclparse.NewParser()
+	fs := NewOsFs()
+
+	primaryPaths, diags := dirFiles(fs, dir)
+	for _, filename := range primaryPaths {
+		var file *hcl.File
+		var fileDiags hcl.Diagnostics
+
+		b, err := fs.ReadFile(filename)
+		if err != nil {
+			diags = append(diags, &hcl.Diagnostic{
+				Severity: hcl.DiagError,
+				Summary:  "Failed to read file",
+				Detail:   fmt.Sprintf("The configuration file %q could not be read.", filename),
+			})
+			continue
+		}
+		file, fileDiags = parser.ParseHCL(b, filename)
+
+		diags = append(diags, fileDiags...)
+		if file == nil {
+			continue
+		}
+
+		contentDiags := loadStackFromFile(file, stack)
+		diags = append(diags, contentDiags...)
+	}
+
+	return stack, diagnosticsHCL(diags)
+}
+
+func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
+	var diags hcl.Diagnostics
+	return diags
+}
+
 // LoadModuleFromFile reads given file, interprets it and stores in given Module
 // This is useful for any caller which does tokenization/parsing on its own
 // e.g. because it will reuse these parsed files later for more detailed

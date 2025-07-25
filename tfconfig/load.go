@@ -86,8 +86,8 @@ func dirFiles(fs FS, dir string) (primary []string, diags hcl.Diagnostics) {
 	if err != nil {
 		diags = append(diags, &hcl.Diagnostic{
 			Severity: hcl.DiagError,
-			Summary:  "Failed to read module directory",
-			Detail:   fmt.Sprintf("Module directory %s does not exist or cannot be read.", dir),
+			Summary:  "Failed to read directory",
+			Detail:   fmt.Sprintf("Directory %s does not exist or cannot be read.", dir),
 		})
 		return
 	}
