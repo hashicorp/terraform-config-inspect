@@ -130,6 +130,10 @@ func fileExt(path string) string {
 		return ".tf"
 	} else if strings.HasSuffix(path, ".tf.json") {
 		return ".tf.json"
+	} else if strings.HasSuffix(path, ".tfcomponent.hcl") {
+		return ".tfcomponent.hcl"
+	} else if strings.HasSuffix(path, ".tfstack.hcl") {
+		return ".tfstack.hcl"
 	} else {
 		return ""
 	}

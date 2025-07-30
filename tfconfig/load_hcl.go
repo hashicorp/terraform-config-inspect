@@ -87,6 +87,81 @@ func LoadStack(dir string) (*Stack, Diagnostics) {
 
 func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 	var diags hcl.Diagnostics
+	content, _, contentDiags := file.Body.PartialContent(rootSchema)
+	diags = append(diags, contentDiags...)
+
+	for _, block := range content.Blocks {
+		switch block.Type {
+
+		case "variable":
+			content, _, contentDiags := block.Body.PartialContent(variableSchema)
+			diags = append(diags, contentDiags...)
+
+			name := block.Labels[0]
+			v := &Variable{
+				Name: name,
+				Pos:  sourcePosHCL(block.DefRange),
+			}
+
+			stack.Variables[name] = v
+
+			if attr, defined := content.Attributes["type"]; defined {
+				var typeExpr string
+				var typeExprAsStr string
+				// Older versions of HCL expected the type
+				// to be a string containing a keyword, so we'll need to
+				// handle that as a special case first for backward compatibility.
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &typeExprAsStr)
+				if !valDiags.HasErrors() {
+					typeExpr = typeExprAsStr
+				} else {
+					// Since HCL may evolve its type expression syntax in
+					// future versions, we don't want to be overly-strict in how
+					// we handle it here, and so we'll instead just take the raw
+					// source provided by the user, using the source location
+					// information in the expression object
+					rng := attr.Expr.Range()
+					typeExpr = string(rng.SliceBytes(file.Bytes))
+				}
+				v.Type = typeExpr
+			}
+
+			if attr, defined := content.Attributes["description"]; defined {
+				var description string
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &description)
+				diags = append(diags, valDiags...)
+				v.Description = description
+			}
+
+			if attr, defined := content.Attributes["default"]; defined {
+				val, valDiags := attr.Expr.Value(nil)
+				diags = append(diags, valDiags...)
+				if val.IsWhollyKnown() { // should only be false if there are errors in the input
+					valJSON, err := ctyjson.Marshal(val, val.Type())
+					if err != nil {
+						// Should never happen, since all possible known
+						// values have a JSON mapping.
+						panic(fmt.Errorf("failed to serialize default value as JSON: %s", err))
+					}
+					var def interface{}
+					err = json.Unmarshal(valJSON, &def)
+					if err != nil {
+						// Again should never happen, because valJSON is
+						// guaranteed valid by ctyjson.Marshal.
+						panic(fmt.Errorf("failed to re-parse default value from JSON: %s", err))
+					}
+					v.Default = def
+				}
+			} else {
+				v.Required = true
+			}
+
+		default:
+			// For now, we only handle variable blocks in stacks
+			// Other block types will be ignored
+		}
+	}
+
 	return diags
 }
 
