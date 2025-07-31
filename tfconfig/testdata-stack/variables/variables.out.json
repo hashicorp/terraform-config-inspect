@@ -1,0 +1,97 @@
+{
+    "path": "testdata-stack/variables",
+    "required_providers": {},
+    "variables": {
+        "primitive": {
+            "name": "primitive",
+            "default": null,
+            "required": true,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 1
+            }
+        },
+        "list": {
+            "name": "list",
+            "type": "list(string)",
+            "default": null,
+            "required": true,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 4
+            }
+        },
+        "string_default_empty": {
+            "name": "string_default_empty",
+            "type": "string",
+            "default": "",
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 8
+            }
+        },
+        "string_default_null": {
+            "name": "string_default_null",
+            "type": "string",
+            "default": null,
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 13
+            }
+        },
+        "list_default_empty": {
+            "name": "list_default_empty",
+            "type": "list(string)",
+            "default": [],
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 18
+            }
+        },
+        "object_default_empty": {
+            "name": "object_default_empty",
+            "type": "object({})",
+            "default": {},
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 23
+            }
+        },
+        "number_default_zero": {
+            "name": "number_default_zero",
+            "type": "number",
+            "default": 0,
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 28
+            }
+        },
+        "bool_default_false": {
+            "name": "bool_default_false",
+            "type": "bool",
+            "default": false,
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 33
+            }
+        },
+        "bool_default_false_tfstack": {
+            "name": "bool_default_false_tfstack",
+            "type": "bool",
+            "default": false,
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfstack.hcl",
+                "line": 1
+            }
+        }
+    },
+    "outputs": {},
+    "components": {}
+}
