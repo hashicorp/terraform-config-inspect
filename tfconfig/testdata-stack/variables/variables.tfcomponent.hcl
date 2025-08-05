@@ -34,3 +34,10 @@ variable "bool_default_false" {
   type    = bool
   default = false
 }
+
+variable "unique_variable_name" {
+  description = "Description of the purpose of this variable"
+  type        = string
+  default     = "Default variable value"
+  sensitive   = false
+}

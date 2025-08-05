@@ -1,0 +1,16 @@
+{
+    "path": "testdata-stack/outputs",
+    "required_providers": {},
+    "variables": {},
+    "outputs": {
+        "unique_name_of_output": {
+            "name": "unique_name_of_output",
+            "description": "Description of the purpose of this output",
+            "pos": {
+                "filename": "testdata-stack/outputs/outputs.tfcomponent.hcl",
+                "line": 1
+            }
+        }
+    },
+    "components": {}
+}
