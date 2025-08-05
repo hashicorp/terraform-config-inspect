@@ -89,6 +89,9 @@ var outputSchema = &hcl.BodySchema{
 		{
 			Name: "sensitive",
 		},
+		{
+			Name: "type",
+		},
 	},
 }
 

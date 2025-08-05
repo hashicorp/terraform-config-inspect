@@ -176,6 +176,27 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 				o.Description = description
 			}
 
+			if attr, defined := content.Attributes["type"]; defined {
+				var typeExpr string
+				var typeExprAsStr string
+				// Older versions of HCL expected the type
+				// to be a string containing a keyword, so we'll need to
+				// handle that as a special case first for backward compatibility.
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &typeExprAsStr)
+				if !valDiags.HasErrors() {
+					typeExpr = typeExprAsStr
+				} else {
+					// Since HCL may evolve its type expression syntax in
+					// future versions, we don't want to be overly-strict in how
+					// we handle it here, and so we'll instead just take the raw
+					// source provided by the user, using the source location
+					// information in the expression object
+					rng := attr.Expr.Range()
+					typeExpr = string(rng.SliceBytes(file.Bytes))
+				}
+				o.Type = typeExpr
+			}
+
 		default:
 			// For now, we only handle variable blocks in stacks
 			// Other block types will be ignored

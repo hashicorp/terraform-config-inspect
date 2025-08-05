@@ -6,9 +6,19 @@
         "unique_name_of_output": {
             "name": "unique_name_of_output",
             "description": "Description of the purpose of this output",
+            "type": "string",
             "pos": {
                 "filename": "testdata-stack/outputs/outputs.tfcomponent.hcl",
                 "line": 1
+            }
+        },
+        "lambda_urls": {
+            "name": "lambda_urls",
+            "type": "list(string)",
+            "description": "URLs to invoke lambda functions",
+            "pos": {
+                "filename": "testdata-stack/outputs/outputs.tfstack.hcl",
+                "line": 2
             }
         }
     },
