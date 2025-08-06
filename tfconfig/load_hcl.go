@@ -197,6 +197,26 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 				o.Type = typeExpr
 			}
 
+		case "component":
+
+			content, _, contentDiags := block.Body.PartialContent(componentSchema)
+			diags = append(diags, contentDiags...)
+
+			name := block.Labels[0]
+			c := &Component{
+				Name: name,
+				Pos:  sourcePosHCL(block.DefRange),
+			}
+
+			stack.Components[name] = c
+
+			if attr, defined := content.Attributes["source"]; defined {
+				var source string
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &source)
+				diags = append(diags, valDiags...)
+				c.Source = source
+			}
+
 		default:
 			// For now, we only handle variable blocks in stacks
 			// Other block types will be ignored

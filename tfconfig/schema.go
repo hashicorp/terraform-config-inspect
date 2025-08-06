@@ -37,6 +37,10 @@ var rootSchema = &hcl.BodySchema{
 			Type:       "module",
 			LabelNames: []string{"name"},
 		},
+		{
+			Type:       "component",
+			LabelNames: []string{"name"},
+		},
 	},
 }
 
@@ -113,6 +117,14 @@ var resourceSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
 			Name: "provider",
+		},
+	},
+}
+
+var componentSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "source",
 		},
 	},
 }
