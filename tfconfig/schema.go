@@ -41,6 +41,10 @@ var rootSchema = &hcl.BodySchema{
 			Type:       "component",
 			LabelNames: []string{"name"},
 		},
+		{
+			Type:       "required_providers",
+			LabelNames: nil,
+		},
 	},
 }
 

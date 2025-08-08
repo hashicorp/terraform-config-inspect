@@ -217,6 +217,32 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 				c.Source = source
 			}
 
+		case "required_providers":
+			reqs, reqsDiags := decodeRequiredProvidersBlock(block)
+			diags = append(diags, reqsDiags...)
+			for name, req := range reqs {
+				if _, exists := stack.RequiredProviders[name]; !exists {
+					// For stacks, we only care about the source, not version constraints
+					stack.RequiredProviders[name] = &ProviderRequirement{
+						Source: req.Source,
+					}
+				} else {
+					if req.Source != "" {
+						source := stack.RequiredProviders[name].Source
+						if source != "" && source != req.Source {
+							diags = append(diags, &hcl.Diagnostic{
+								Severity: hcl.DiagError,
+								Summary:  "Multiple provider source attributes",
+								Detail:   fmt.Sprintf("Found multiple source attributes for provider %s: %q, %q", name, source, req.Source),
+								Subject:  &block.DefRange,
+							})
+						} else {
+							stack.RequiredProviders[name].Source = req.Source
+						}
+					}
+				}
+			}
+
 		default:
 			// For now, we only handle variable blocks in stacks
 			// Other block types will be ignored
