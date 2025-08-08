@@ -1,0 +1,48 @@
+{
+    "path": "testdata-stack/components",
+    "required_providers": {},
+    "variables": {},
+    "outputs": {},
+    "components": {
+        "s3": {
+            "name": "s3",
+            "source": "./s3",
+            "pos": {
+                "filename": "testdata-stack/components/components.tfcomponent.hcl",
+                "line": 1
+            }
+        },
+        "lambda": {
+            "name": "lambda",
+            "source": "./lambda",
+            "pos": {
+                "filename": "testdata-stack/components/components.tfcomponent.hcl",
+                "line": 16
+            }
+        },
+        "api_gateway": {
+            "name": "api_gateway",
+            "source": "./api-gateway",
+            "pos": {
+                "filename": "testdata-stack/components/components.tfcomponent.hcl",
+                "line": 34
+            }
+        },
+        "compute": {
+            "name": "compute",
+            "source": "hashicorp/vault-starter/aws",
+            "pos": {
+                "filename": "testdata-stack/components/components.tfstack.hcl",
+                "line": 1
+            }
+        },
+        "repositories": {
+            "name": "repositories",
+            "source": "app.terraform.io/hashicorp/nomad-starter/aws",
+            "pos": {
+                "filename": "testdata-stack/components/components.tfstack.hcl",
+                "line": 15
+            }
+        }
+    }
+}

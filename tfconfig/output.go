@@ -9,4 +9,5 @@ type Output struct {
 	Description string    `json:"description,omitempty"`
 	Sensitive   bool      `json:"sensitive,omitempty"`
 	Pos         SourcePos `json:"pos"`
+	Type        string    `json:"type,omitempty"`
 }

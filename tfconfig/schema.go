@@ -37,6 +37,14 @@ var rootSchema = &hcl.BodySchema{
 			Type:       "module",
 			LabelNames: []string{"name"},
 		},
+		{
+			Type:       "component",
+			LabelNames: []string{"name"},
+		},
+		{
+			Type:       "required_providers",
+			LabelNames: nil,
+		},
 	},
 }
 
@@ -89,6 +97,9 @@ var outputSchema = &hcl.BodySchema{
 		{
 			Name: "sensitive",
 		},
+		{
+			Name: "type",
+		},
 	},
 }
 
@@ -110,6 +121,14 @@ var resourceSchema = &hcl.BodySchema{
 	Attributes: []hcl.AttributeSchema{
 		{
 			Name: "provider",
+		},
+	},
+}
+
+var componentSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "source",
 		},
 	},
 }

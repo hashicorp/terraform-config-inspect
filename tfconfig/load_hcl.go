@@ -156,6 +156,93 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 				v.Required = true
 			}
 
+		case "output":
+
+			content, _, contentDiags := block.Body.PartialContent(outputSchema)
+			diags = append(diags, contentDiags...)
+
+			name := block.Labels[0]
+			o := &Output{
+				Name: name,
+				Pos:  sourcePosHCL(block.DefRange),
+			}
+
+			stack.Outputs[name] = o
+
+			if attr, defined := content.Attributes["description"]; defined {
+				var description string
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &description)
+				diags = append(diags, valDiags...)
+				o.Description = description
+			}
+
+			if attr, defined := content.Attributes["type"]; defined {
+				var typeExpr string
+				var typeExprAsStr string
+				// Older versions of HCL expected the type
+				// to be a string containing a keyword, so we'll need to
+				// handle that as a special case first for backward compatibility.
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &typeExprAsStr)
+				if !valDiags.HasErrors() {
+					typeExpr = typeExprAsStr
+				} else {
+					// Since HCL may evolve its type expression syntax in
+					// future versions, we don't want to be overly-strict in how
+					// we handle it here, and so we'll instead just take the raw
+					// source provided by the user, using the source location
+					// information in the expression object
+					rng := attr.Expr.Range()
+					typeExpr = string(rng.SliceBytes(file.Bytes))
+				}
+				o.Type = typeExpr
+			}
+
+		case "component":
+
+			content, _, contentDiags := block.Body.PartialContent(componentSchema)
+			diags = append(diags, contentDiags...)
+
+			name := block.Labels[0]
+			c := &Component{
+				Name: name,
+				Pos:  sourcePosHCL(block.DefRange),
+			}
+
+			stack.Components[name] = c
+
+			if attr, defined := content.Attributes["source"]; defined {
+				var source string
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &source)
+				diags = append(diags, valDiags...)
+				c.Source = source
+			}
+
+		case "required_providers":
+			reqs, reqsDiags := decodeRequiredProvidersBlock(block)
+			diags = append(diags, reqsDiags...)
+			for name, req := range reqs {
+				if _, exists := stack.RequiredProviders[name]; !exists {
+					// For stacks, we only care about the source, not version constraints
+					stack.RequiredProviders[name] = &ProviderRequirement{
+						Source: req.Source,
+					}
+				} else {
+					if req.Source != "" {
+						source := stack.RequiredProviders[name].Source
+						if source != "" && source != req.Source {
+							diags = append(diags, &hcl.Diagnostic{
+								Severity: hcl.DiagError,
+								Summary:  "Multiple provider source attributes",
+								Detail:   fmt.Sprintf("Found multiple source attributes for provider %s: %q, %q", name, source, req.Source),
+								Subject:  &block.DefRange,
+							})
+						} else {
+							stack.RequiredProviders[name].Source = req.Source
+						}
+					}
+				}
+			}
+
 		default:
 			// For now, we only handle variable blocks in stacks
 			// Other block types will be ignored

@@ -90,6 +90,17 @@
                 "filename": "testdata-stack/variables/variables.tfstack.hcl",
                 "line": 1
             }
+        },
+        "unique_variable_name": {
+            "name": "unique_variable_name",
+            "description": "Description of the purpose of this variable",
+            "type": "string",
+            "default": "Default variable value",
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/variables/variables.tfcomponent.hcl",
+                "line": 38
+            }
         }
     },
     "outputs": {},
