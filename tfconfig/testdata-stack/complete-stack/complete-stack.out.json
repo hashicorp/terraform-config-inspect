@@ -1,0 +1,97 @@
+{
+    "path": "testdata-stack/complete-stack",
+    "required_providers": {
+        "archive": {
+            "source": "hashicorp/archive"
+        },
+        "aws": {
+            "source": "hashicorp/aws"
+        },
+        "local": {
+            "source": "hashicorp/local"
+        },
+        "random": {
+            "source": "hashicorp/random"
+        }
+    },
+    "variables": {
+        "default_tags": {
+            "name": "default_tags",
+            "type": "map(string)",
+            "description": "A map of default tags to apply to all AWS resources",
+            "default": {},
+            "required": false,
+            "pos": {
+                "filename": "testdata-stack/complete-stack/variables.tfstack.hcl",
+                "line": 17
+            }
+        },
+        "identity_token": {
+            "name": "identity_token",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "pos": {
+                "filename": "testdata-stack/complete-stack/variables.tfstack.hcl",
+                "line": 8
+            }
+        },
+        "regions": {
+            "name": "regions",
+            "type": "set(string)",
+            "default": null,
+            "required": true,
+            "pos": {
+                "filename": "testdata-stack/complete-stack/variables.tfstack.hcl",
+                "line": 4
+            }
+        },
+        "role_arn": {
+            "name": "role_arn",
+            "type": "string",
+            "default": null,
+            "required": true,
+            "pos": {
+                "filename": "testdata-stack/complete-stack/variables.tfstack.hcl",
+                "line": 13
+            }
+        }
+    },
+    "outputs": {
+        "lambda_urls": {
+            "name": "lambda_urls",
+            "type": "list(string)",
+            "description": "URLs to invoke lambda functions",
+            "pos": {
+                "filename": "testdata-stack/complete-stack/outputs.tfcomponent.hcl",
+                "line": 1
+            }
+        }
+    },
+    "components": {
+        "api_gateway": {
+            "name": "api_gateway",
+            "source": "./api-gateway",
+            "pos": {
+                "filename": "testdata-stack/complete-stack/components.tfcomponent.hcl",
+                "line": 37
+            }
+        },
+        "lambda": {
+            "name": "lambda",
+            "source": "./lambda",
+            "pos": {
+                "filename": "testdata-stack/complete-stack/components.tfcomponent.hcl",
+                "line": 19
+            }
+        },
+        "s3": {
+            "name": "s3",
+            "source": "./s3",
+            "pos": {
+                "filename": "testdata-stack/complete-stack/components.tfcomponent.hcl",
+                "line": 4
+            }
+        }
+    }
+}
