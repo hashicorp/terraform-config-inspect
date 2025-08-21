@@ -13,6 +13,7 @@ import (
 )
 
 var showJSON = flag.Bool("json", false, "produce JSON-formatted output")
+var parseStack = flag.Bool("stack", false, "parse as Terraform stack instead of module")
 
 func main() {
 	flag.Parse()
@@ -24,16 +25,30 @@ func main() {
 		dir = "."
 	}
 
-	module, _ := tfconfig.LoadModule(dir)
+	if *parseStack {
+		stack, diags := tfconfig.LoadStack(dir)
 
-	if *showJSON {
-		showModuleJSON(module)
+		if *showJSON {
+			showStackJSON(stack)
+		} else {
+			showStackMarkdown(stack)
+		}
+
+		if diags.HasErrors() {
+			os.Exit(1)
+		}
 	} else {
-		showModuleMarkdown(module)
-	}
+		module, _ := tfconfig.LoadModule(dir)
 
-	if module.Diagnostics.HasErrors() {
-		os.Exit(1)
+		if *showJSON {
+			showModuleJSON(module)
+		} else {
+			showModuleMarkdown(module)
+		}
+
+		if module.Diagnostics.HasErrors() {
+			os.Exit(1)
+		}
 	}
 }
 
@@ -52,5 +67,65 @@ func showModuleMarkdown(module *tfconfig.Module) {
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error rendering template: %s\n", err)
 		os.Exit(2)
+	}
+}
+
+func showStackJSON(stack *tfconfig.Stack) {
+	j, err := json.MarshalIndent(stack, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error producing JSON: %s\n", err)
+		os.Exit(2)
+	}
+	os.Stdout.Write(j)
+	os.Stdout.Write([]byte{'\n'})
+}
+
+func showStackMarkdown(stack *tfconfig.Stack) {
+	fmt.Printf("# Terraform Stack: %s\n\n", stack.Path)
+
+	if len(stack.Variables) > 0 {
+		fmt.Printf("## Variables\n\n")
+		for name, variable := range stack.Variables {
+			fmt.Printf("- **%s** (%s)", name, variable.Type)
+			if variable.Description != "" {
+				fmt.Printf(": %s", variable.Description)
+			}
+			fmt.Printf("\n")
+		}
+		fmt.Printf("\n")
+	}
+
+	if len(stack.Outputs) > 0 {
+		fmt.Printf("## Outputs\n\n")
+		for name, output := range stack.Outputs {
+			fmt.Printf("- **%s**", name)
+			if output.Description != "" {
+				fmt.Printf(": %s", output.Description)
+			}
+			fmt.Printf("\n")
+		}
+		fmt.Printf("\n")
+	}
+
+	if len(stack.Components) > 0 {
+		fmt.Printf("## Components\n\n")
+		for name, component := range stack.Components {
+			fmt.Printf("- **%s** (source: `%s`)\n", name, component.Source)
+		}
+		fmt.Printf("\n")
+	}
+
+	if len(stack.RequiredProviders) > 0 {
+		fmt.Printf("## Required Providers\n\n")
+		for name, provider := range stack.RequiredProviders {
+			fmt.Printf("- **%s**", name)
+			if provider.Source != "" {
+				fmt.Printf(" (source: `%s`)", provider.Source)
+			}
+			if len(provider.VersionConstraints) > 0 {
+				fmt.Printf(" version: %s", provider.VersionConstraints[0])
+			}
+			fmt.Printf("\n")
+		}
 	}
 }

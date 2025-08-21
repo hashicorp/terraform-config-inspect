@@ -34,10 +34,17 @@ be lower in older language versions.
 The primary way to use this repository is as a Go library, but as a convenience
 it also contains a CLI tool called `terraform-config-inspect`, installed
 automatically by the `go get` command above, that allows viewing module
-information in either a Markdown-like format or in JSON format.
+information in either a Markdown-like format or in JSON format. It also 
+supports parsing Terraform stacks using the `--stack` flag.
 
 ```sh
 $ terraform-config-inspect path/to/module
+```
+
+For Terraform stacks:
+
+```sh
+$ terraform-config-inspect --stack path/to/stack
 ```
 
 ```markdown
@@ -136,6 +143,85 @@ $ terraform-config-inspect --json path/to/module
   },
   "data_resources": {},
   "module_calls": {}
+}
+```
+
+For Terraform stacks, you can use the `--stack` flag:
+
+```sh
+$ terraform-config-inspect --stack path/to/stack
+```
+
+```markdown
+# Terraform Stack: path/to/stack
+
+## Variables
+
+- **regions** (set(string))
+- **identity_token** (string)
+- **default_tags** (map(string)): A map of default tags to apply to all AWS resources
+
+## Outputs
+
+- **lambda_urls**: URLs to invoke lambda functions
+
+## Components
+
+- **s3** (source: `./s3`)
+- **lambda** (source: `./lambda`)
+- **api_gateway** (source: `./api-gateway`)
+
+## Required Providers
+
+- **aws** (source: `hashicorp/aws`)
+- **archive** (source: `hashicorp/archive`)
+```
+
+```sh
+$ terraform-config-inspect --stack --json path/to/stack
+```
+
+```json
+{
+  "path": "path/to/stack",
+  "variables": {
+    "regions": {
+      "name": "regions",
+      "type": "set(string)",
+      "default": null,
+      "required": true,
+      "pos": {
+        "filename": "path/to/stack/variables.tfstack.hcl",
+        "line": 4
+      }
+    }
+  },
+  "outputs": {
+    "lambda_urls": {
+      "name": "lambda_urls",
+      "description": "URLs to invoke lambda functions",
+      "pos": {
+        "filename": "path/to/stack/outputs.tfcomponent.hcl",
+        "line": 1
+      },
+      "type": "list(string)"
+    }
+  },
+  "required_providers": {
+    "aws": {
+      "source": "hashicorp/aws"
+    }
+  },
+  "components": {
+    "s3": {
+      "name": "s3",
+      "source": "./s3",
+      "pos": {
+        "filename": "path/to/stack/components.tfcomponent.hcl",
+        "line": 4
+      }
+    }
+  }
 }
 ```
 
