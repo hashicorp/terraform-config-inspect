@@ -27,6 +27,7 @@ func main() {
 
 	if *parseStack {
 		stack, diags := tfconfig.LoadStack(dir)
+		stack.Diagnostics = diags
 
 		if *showJSON {
 			showStackJSON(stack)
@@ -34,7 +35,7 @@ func main() {
 			showStackMarkdown(stack)
 		}
 
-		if diags.HasErrors() {
+		if stack.Diagnostics.HasErrors() {
 			os.Exit(1)
 		}
 	} else {
@@ -126,6 +127,27 @@ func showStackMarkdown(stack *tfconfig.Stack) {
 				fmt.Printf(" version: %s", provider.VersionConstraints[0])
 			}
 			fmt.Printf("\n")
+		}
+	}
+
+	if len(stack.Diagnostics) > 0 {
+		fmt.Printf("## Problems\n\n")
+		for _, diag := range stack.Diagnostics {
+			severity := ""
+			switch diag.Severity {
+			case tfconfig.DiagError:
+				severity = "Error: "
+			case tfconfig.DiagWarning:
+				severity = "Warning: "
+			}
+			fmt.Printf("## %s%s", severity, diag.Summary)
+			if diag.Pos != nil {
+				fmt.Printf("\n\n(at `%s` line %d)", diag.Pos.Filename, diag.Pos.Line)
+			}
+			if diag.Detail != "" {
+				fmt.Printf("\n\n%s", diag.Detail)
+			}
+			fmt.Printf("\n\n")
 		}
 	}
 }
