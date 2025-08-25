@@ -1,3 +1,6 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
 component "compute" {
   source  = "hashicorp/vault-starter/aws"
   version = "~> 4.0"
