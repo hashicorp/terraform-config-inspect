@@ -87,7 +87,7 @@ func LoadStack(dir string) (*Stack, Diagnostics) {
 
 func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 	var diags hcl.Diagnostics
-	content, _, contentDiags := file.Body.PartialContent(rootSchema)
+	content, _, contentDiags := file.Body.PartialContent(stackSchema)
 	diags = append(diags, contentDiags...)
 
 	for _, block := range content.Blocks {
@@ -243,9 +243,31 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 				}
 			}
 
+		case "provider":
+			if len(block.Labels) < 2 {
+				diags = append(diags, &hcl.Diagnostic{
+					Severity: hcl.DiagError,
+					Summary:  "Invalid provider block",
+					Detail:   "Provider blocks in stacks must have both a provider name and configuration name",
+					Subject:  &block.DefRange,
+				})
+				continue
+			}
+
+			_, _, contentDiags := block.Body.PartialContent(providerConfigSchema)
+			diags = append(diags, contentDiags...)
+
+			providerName := block.Labels[0]
+			_ = block.Labels[1] // configName - not used for metadata extraction
+
+			// For stack providers, we primarily care about tracking that they exist
+			// The actual provider configuration is handled differently in stacks
+			if _, exists := stack.RequiredProviders[providerName]; !exists {
+				stack.RequiredProviders[providerName] = &ProviderRequirement{}
+			}
+
 		default:
-			// For now, we only handle variable blocks in stacks
-			// Other block types will be ignored
+			// Other block types will be ignored for stacks
 		}
 	}
 

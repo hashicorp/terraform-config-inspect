@@ -81,3 +81,34 @@ func TestLoadStack(t *testing.T) {
 		return stack
 	})
 }
+
+func TestProviderLabels(t *testing.T) {
+	// Test that provider blocks with two labels are correctly parsed
+	stack, diags := LoadStack("testdata-stack/provider-labels")
+
+	if diags.HasErrors() {
+		t.Fatalf("unexpected errors: %v", diags)
+	}
+
+	expectedProviders := map[string]bool{
+		"aws":    true,
+		"random": true,
+		"null":   true,
+	}
+
+	if len(stack.RequiredProviders) != len(expectedProviders) {
+		t.Errorf("expected %d required providers, got %d", len(expectedProviders), len(stack.RequiredProviders))
+	}
+
+	for providerName := range expectedProviders {
+		if _, exists := stack.RequiredProviders[providerName]; !exists {
+			t.Errorf("expected provider %q to be in required_providers", providerName)
+		}
+	}
+
+	if awsProvider, exists := stack.RequiredProviders["aws"]; exists {
+		if awsProvider.Source != "hashicorp/aws" {
+			t.Errorf("expected aws provider source to be 'hashicorp/aws', got %q", awsProvider.Source)
+		}
+	}
+}
