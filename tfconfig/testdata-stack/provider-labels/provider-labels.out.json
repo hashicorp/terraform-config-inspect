@@ -1,0 +1,47 @@
+{
+  "path": "testdata-stack/provider-labels",
+  "variables": {
+    "test_var": {
+      "name": "test_var",
+      "type": "string",
+      "description": "Test variable for provider labels test",
+      "default": "test",
+      "required": false,
+      "pos": {
+        "filename": "testdata-stack/provider-labels/providers.tfstack.hcl",
+        "line": 42
+      }
+    }
+  },
+  "outputs": {
+    "test_output": {
+      "name": "test_output",
+      "description": "Test output for provider labels test",
+      "pos": {
+        "filename": "testdata-stack/provider-labels/providers.tfstack.hcl",
+        "line": 48
+      }
+    }
+  },
+  "required_providers": {
+    "aws": {
+      "source": "hashicorp/aws"
+    },
+    "null": {
+      "source": "hashicorp/null"
+    },
+    "random": {
+      "source": "hashicorp/random"
+    }
+  },
+  "components": {
+    "test_component": {
+      "name": "test_component",
+      "source": "./test-module",
+      "pos": {
+        "filename": "testdata-stack/provider-labels/providers.tfstack.hcl",
+        "line": 53
+      }
+    }
+  }
+}
