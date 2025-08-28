@@ -133,16 +133,29 @@ var componentSchema = &hcl.BodySchema{
 	},
 }
 
-// stackSchema defines the schema for Terraform Stacks files
+// stackSchema defines the schema for Terraform Stacks files based on Terraform core's rootConfigSchema
+// https://github.com/hashicorp/terraform/blob/8b65426ecfac58a6937c1c26297c8e6a0db57a35/internal/stacks/stackconfig/file.go
 var stackSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "language",
+		},
+	},
 	Blocks: []hcl.BlockHeaderSchema{
 		{
-			Type:       "terraform",
-			LabelNames: nil,
+			Type:       "stack",
+			LabelNames: []string{"name"},
+		},
+		{
+			Type:       "component",
+			LabelNames: []string{"name"},
 		},
 		{
 			Type:       "variable",
 			LabelNames: []string{"name"},
+		},
+		{
+			Type: "locals",
 		},
 		{
 			Type:       "output",
@@ -150,32 +163,13 @@ var stackSchema = &hcl.BodySchema{
 		},
 		{
 			Type:       "provider",
-			LabelNames: []string{"name", "config_name"},
+			LabelNames: []string{"type", "name"},
 		},
 		{
-			Type:       "component",
-			LabelNames: []string{"name"},
+			Type: "required_providers",
 		},
 		{
-			Type:       "required_providers",
-			LabelNames: nil,
-		},
-	},
-}
-
-// stackProviderSchema defines the schema for provider blocks in stacks
-var stackProviderSchema = &hcl.BodySchema{
-	Attributes: []hcl.AttributeSchema{
-		{
-			Name: "for_each",
-		},
-		{
-			Name: "config",
-		},
-	},
-	Blocks: []hcl.BlockHeaderSchema{
-		{
-			Type: "config",
+			Type: "removed",
 		},
 	},
 }

@@ -254,7 +254,7 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 				continue
 			}
 
-			_, _, contentDiags := block.Body.PartialContent(stackProviderSchema)
+			_, _, contentDiags := block.Body.PartialContent(providerConfigSchema)
 			diags = append(diags, contentDiags...)
 
 			providerName := block.Labels[0]
