@@ -13,7 +13,7 @@ import (
 )
 
 var showJSON = flag.Bool("json", false, "produce JSON-formatted output")
-var parseStack = flag.Bool("stack", false, "parse as Terraform stack instead of module")
+var parseStack = flag.Bool("stack", false, "parse a Terraform stack")
 
 func main() {
 	flag.Parse()

@@ -132,3 +132,50 @@ var componentSchema = &hcl.BodySchema{
 		},
 	},
 }
+
+// stackSchema defines the schema for Terraform Stacks files
+var stackSchema = &hcl.BodySchema{
+	Blocks: []hcl.BlockHeaderSchema{
+		{
+			Type:       "terraform",
+			LabelNames: nil,
+		},
+		{
+			Type:       "variable",
+			LabelNames: []string{"name"},
+		},
+		{
+			Type:       "output",
+			LabelNames: []string{"name"},
+		},
+		{
+			Type:       "provider",
+			LabelNames: []string{"name", "config_name"},
+		},
+		{
+			Type:       "component",
+			LabelNames: []string{"name"},
+		},
+		{
+			Type:       "required_providers",
+			LabelNames: nil,
+		},
+	},
+}
+
+// stackProviderSchema defines the schema for provider blocks in stacks
+var stackProviderSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "for_each",
+		},
+		{
+			Name: "config",
+		},
+	},
+	Blocks: []hcl.BlockHeaderSchema{
+		{
+			Type: "config",
+		},
+	},
+}
