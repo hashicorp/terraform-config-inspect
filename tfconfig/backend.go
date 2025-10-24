@@ -2,7 +2,7 @@ package tfconfig
 
 import "github.com/hashicorp/hcl/v2"
 
-// Output represents a single output from a Terraform module.
+// Backend represents a backend definition from a Terraform module.
 type Backend struct {
 	Type string    `json:"type"`
 	Pos  SourcePos `json:"pos"`

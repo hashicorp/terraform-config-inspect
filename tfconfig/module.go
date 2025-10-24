@@ -11,6 +11,7 @@ type Module struct {
 
 	Variables map[string]*Variable `json:"variables"`
 	Outputs   map[string]*Output   `json:"outputs"`
+	Imports   []*Import            `json:"imports,omitempty"`
 
 	RequiredCore      []string                        `json:"required_core,omitempty"`
 	RequiredProviders map[string]*ProviderRequirement `json:"required_providers"`

@@ -1,0 +1,27 @@
+{
+  "path": "testdata/imports",
+  "imports": [
+    {
+      "to": "some_resource.name",
+      "id": "test:identifier/string",
+      "pos": {
+        "filename": "testdata/imports/imports.tf",
+        "line": 1
+      }
+    },
+    {
+      "to": "some_resource.string",
+      "id": "test2:identifier/string",
+      "pos": {
+        "filename": "testdata/imports/imports.tf",
+        "line": 6
+      }
+    }
+  ],
+  "required_providers": {},
+  "variables": {},
+  "outputs": {},
+  "managed_resources": {},
+  "data_resources": {},
+  "module_calls": {}
+}

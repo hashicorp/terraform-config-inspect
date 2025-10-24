@@ -16,6 +16,30 @@ import (
 	ctyjson "github.com/zclconf/go-cty/cty/json"
 )
 
+// traversalToString converts an HCL traversal to its string representation
+// e.g., [TraverseRoot{Name: "aws_instance"}, TraverseAttr{Name: "example"}] -> "aws_instance.example"
+func traversalToString(traversal hcl.Traversal) string {
+	if len(traversal) == 0 {
+		return ""
+	}
+
+	var parts []string
+	for _, step := range traversal {
+		switch s := step.(type) {
+		case hcl.TraverseRoot:
+			parts = append(parts, s.Name)
+		case hcl.TraverseAttr:
+			parts = append(parts, s.Name)
+		case hcl.TraverseIndex:
+			// For index access like resource["key"], we'd need to handle this differently
+			// but for import "to" fields, this shouldn't typically occur
+			// For now, just convert to string representation
+			parts = append(parts, fmt.Sprintf("[%v]", s.Key))
+		}
+	}
+	return strings.Join(parts, ".")
+}
+
 func loadModule(fs FS, dir string) (*Module, Diagnostics) {
 	mod := NewModule(dir)
 	primaryPaths, diags := dirFiles(fs, dir)
@@ -224,6 +248,39 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &sensitive)
 				diags = append(diags, valDiags...)
 				o.Sensitive = sensitive
+			}
+
+		case "import":
+
+			content, _, contentDiags := block.Body.PartialContent(importSchema)
+			diags = append(diags, contentDiags...)
+
+			i := &Import{
+				Pos: sourcePosHCL(block.DefRange),
+			}
+
+			mod.Imports = append(mod.Imports, i)
+
+			if attr, defined := content.Attributes["to"]; defined {
+				// Try to parse as a traversal expression first (e.g., some_resource.name)
+				traversal, travDiags := hcl.AbsTraversalForExpr(attr.Expr)
+				if travDiags.HasErrors() {
+					// Fall back on trying to parse as a string literal
+					var to string
+					valDiags := gohcl.DecodeExpression(attr.Expr, nil, &to)
+					diags = append(diags, valDiags...)
+					i.To = to
+				} else {
+					// Convert traversal back to string representation
+					i.To = traversalToString(traversal)
+				}
+			}
+
+			if attr, defined := content.Attributes["id"]; defined {
+				var id string
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &id)
+				diags = append(diags, valDiags...)
+				i.Id = id
 			}
 
 		case "provider":

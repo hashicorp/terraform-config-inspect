@@ -22,6 +22,10 @@ var rootSchema = &hcl.BodySchema{
 			LabelNames: []string{"name"},
 		},
 		{
+			Type:       "import",
+			LabelNames: nil,
+		},
+		{
 			Type:       "provider",
 			LabelNames: []string{"name"},
 		},
@@ -92,6 +96,17 @@ var outputSchema = &hcl.BodySchema{
 		},
 		{
 			Name: "sensitive",
+		},
+	},
+}
+
+var importSchema = &hcl.BodySchema{
+	Attributes: []hcl.AttributeSchema{
+		{
+			Name: "to",
+		},
+		{
+			Name: "id",
 		},
 	},
 }
