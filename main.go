@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 
 	"github.com/hashicorp/terraform-config-inspect/tfconfig"
 	flag "github.com/spf13/pflag"
@@ -14,6 +15,7 @@ import (
 
 var showJSON = flag.Bool("json", false, "produce JSON-formatted output")
 var parseStack = flag.Bool("stack", false, "parse a Terraform stack")
+var parsePostInitConfiguration = flag.Bool("after-init", false, "parse a Terraform configuration after init")
 
 func main() {
 	flag.Parse()
@@ -25,7 +27,21 @@ func main() {
 		dir = "."
 	}
 
-	if *parseStack {
+	if *parsePostInitConfiguration {
+		if !*showJSON {
+			fmt.Fprintln(os.Stderr, "error: --after-init requires --json flag")
+			os.Exit(1)
+		}
+		dataDir := os.Getenv("TF_DATA_DIR")
+		if dataDir == "" {
+			dataDir = filepath.Join(dir, ".terraform")
+		}
+		cfg := tfconfig.LoadPostInit(dir, dataDir)
+		showConfigJSON(cfg)
+		if cfg.Diagnostics.HasErrors() {
+			os.Exit(1)
+		}
+	} else if *parseStack {
 		stack, diags := tfconfig.LoadStack(dir)
 		stack.Diagnostics = diags
 
@@ -73,6 +89,16 @@ func showModuleMarkdown(module *tfconfig.Module) {
 
 func showStackJSON(stack *tfconfig.Stack) {
 	j, err := json.MarshalIndent(stack, "", "  ")
+	if err != nil {
+		fmt.Fprintf(os.Stderr, "error producing JSON: %s\n", err)
+		os.Exit(2)
+	}
+	os.Stdout.Write(j)
+	os.Stdout.Write([]byte{'\n'})
+}
+
+func showConfigJSON(cfg *tfconfig.Configuration) {
+	j, err := json.MarshalIndent(cfg, "", "  ")
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error producing JSON: %s\n", err)
 		os.Exit(2)
