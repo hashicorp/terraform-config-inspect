@@ -1,0 +1,29 @@
+{
+  "Modules": [
+    {
+      "Key": "",
+      "Source": "",
+      "Version": ""
+    },
+    {
+      "Key": "vpc",
+      "Source": "registry.terraform.io/terraform-aws-modules/vpc/aws",
+      "Version": "5.1.0"
+    },
+    {
+      "Key": "ec2",
+      "Source": "registry.terraform.io/terraform-aws-modules/ec2-instance/aws",
+      "Version": "5.5.0"
+    },
+    {
+      "Key": "local_module",
+      "Source": "./modules/local",
+      "Version": ""
+    },
+    {
+      "Key": "git_module",
+      "Source": "git::https://example.com/module.git",
+      "Version": ""
+    }
+  ]
+}
