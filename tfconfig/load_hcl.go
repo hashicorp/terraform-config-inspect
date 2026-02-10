@@ -373,6 +373,13 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				v.Description = description
 			}
 
+			if attr, defined := content.Attributes["deprecated"]; defined {
+				var deprecated string
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &deprecated)
+				diags = append(diags, valDiags...)
+				v.Deprecated = deprecated
+			}
+
 			if attr, defined := content.Attributes["default"]; defined {
 				// To avoid the caller needing to deal with cty here, we'll
 				// use its JSON encoding to convert into an
@@ -425,6 +432,13 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &description)
 				diags = append(diags, valDiags...)
 				o.Description = description
+			}
+
+			if attr, defined := content.Attributes["deprecated"]; defined {
+				var deprecated string
+				valDiags := gohcl.DecodeExpression(attr.Expr, nil, &deprecated)
+				diags = append(diags, valDiags...)
+				o.Deprecated = deprecated
 			}
 
 			if attr, defined := content.Attributes["sensitive"]; defined {
