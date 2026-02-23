@@ -70,6 +70,23 @@ func TestLoadPostInit(t *testing.T) {
 	}
 }
 
+func TestLoadPostInit_Empty(t *testing.T) {
+	path := filepath.Join("testdata-post-init", "empty")
+	dataDir := filepath.Join(path, ".terraform")
+
+	cfg := LoadPostInit(path, dataDir)
+
+	if cfg == nil {
+		t.Fatal("result is nil")
+	}
+
+	assertEqual(t, cfg.Path, path, "path")
+	assertEqual(t, len(cfg.Providers), 0, "providers count")
+	assertEqual(t, len(cfg.Modules), 0, "modules count")
+	assertEqual(t, cfg.Diagnostics.HasErrors(), false, "diagnostic errors")
+	assertEqual(t, len(cfg.Diagnostics), 2, "diagnostics count")
+}
+
 func TestLoadPostInitFromFilesystem(t *testing.T) {
 	path := filepath.Join("testdata-post-init", "basic")
 	dataDir := filepath.Join(path, ".terraform")
