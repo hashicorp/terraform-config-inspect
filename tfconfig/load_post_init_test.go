@@ -17,7 +17,7 @@ func assertEqual[T comparable](t *testing.T, got, want T, msg string) {
 }
 
 func TestLoadPostInit(t *testing.T) {
-	path := "testdata-post-init"
+	path := filepath.Join("testdata-post-init", "basic")
 	dataDir := filepath.Join(path, ".terraform")
 
 	cfg := LoadPostInit(path, dataDir)
@@ -71,7 +71,7 @@ func TestLoadPostInit(t *testing.T) {
 }
 
 func TestLoadPostInitFromFilesystem(t *testing.T) {
-	path := "testdata-post-init"
+	path := filepath.Join("testdata-post-init", "basic")
 	dataDir := filepath.Join(path, ".terraform")
 
 	fs := os.DirFS(".")
