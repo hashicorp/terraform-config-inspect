@@ -5,7 +5,9 @@ package tfconfig
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"os"
 	"path/filepath"
 
 	"github.com/hashicorp/hcl/v2"
@@ -83,6 +85,14 @@ func loadTFDataDir(fs FS, dataDir string, cfg *Configuration) {
 	filename := filepath.Join(dataDir, "modules", "modules.json")
 
 	content, err := fs.ReadFile(filename)
+	if errors.Is(err, os.ErrNotExist) {
+		cfg.Diagnostics = append(cfg.Diagnostics, Diagnostic{
+			Severity: DiagWarning,
+			Summary:  "Module manifest file does not exist",
+			Detail:   fmt.Sprintf("Module manifest file %s does not exist", filename),
+		})
+		return
+	}
 	if err != nil {
 		cfg.Diagnostics = append(cfg.Diagnostics, Diagnostic{
 			Severity: DiagError,
@@ -120,6 +130,14 @@ func loadTFLockFile(fs FS, workingDir string, cfg *Configuration) {
 	filename := filepath.Join(workingDir, ".terraform.lock.hcl")
 
 	content, err := fs.ReadFile(filename)
+	if errors.Is(err, os.ErrNotExist) {
+		cfg.Diagnostics = append(cfg.Diagnostics, Diagnostic{
+			Severity: DiagWarning,
+			Summary:  "Lock file does not exist",
+			Detail:   fmt.Sprintf("Lock file %s does not exist", filename),
+		})
+		return
+	}
 	if err != nil {
 		cfg.Diagnostics = append(cfg.Diagnostics, Diagnostic{
 			Severity: DiagError,
