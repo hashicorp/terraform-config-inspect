@@ -481,6 +481,7 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			mod.ProviderConfigs[providerKey] = &ProviderConfig{
 				Name:  name,
 				Alias: alias,
+				Pos:   sourcePosHCL(block.DefRange),
 			}
 
 		case "resource", "data":
