@@ -287,6 +287,10 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 		switch block.Type {
 
 		case "terraform":
+
+			if mod.RequiredCore == nil  || mod.RequiredProviders == nil  {
+				break
+			}
 			content, _, contentDiags := block.Body.PartialContent(terraformBlockSchema)
 			diags = append(diags, contentDiags...)
 
@@ -329,6 +333,10 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			}
 
 		case "variable":
+
+			if mod.Variables == nil {
+				break
+			}
 			content, _, contentDiags := block.Body.PartialContent(variableSchema)
 			diags = append(diags, contentDiags...)
 
@@ -416,6 +424,9 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 
 		case "output":
 
+			if mod.Outputs == nil {
+				break
+			}
 			content, _, contentDiags := block.Body.PartialContent(outputSchema)
 			diags = append(diags, contentDiags...)
 
@@ -450,6 +461,9 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 
 		case "provider":
 
+			if mod.RequiredProviders == nil || mod.ProviderConfigs == nil {
+				break
+			}
 			content, _, contentDiags := block.Body.PartialContent(providerConfigSchema)
 			diags = append(diags, contentDiags...)
 
@@ -484,6 +498,10 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			}
 
 		case "resource", "data":
+
+			if mod.ManagedResources == nil || mod.DataResources == nil {
+				break
+			}
 
 			content, _, contentDiags := block.Body.PartialContent(resourceSchema)
 			diags = append(diags, contentDiags...)
@@ -563,6 +581,10 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			}
 
 		case "module":
+
+			if mod.ModuleCalls == nil {
+				break
+			}
 
 			content, _, contentDiags := block.Body.PartialContent(moduleCallSchema)
 			diags = append(diags, contentDiags...)
