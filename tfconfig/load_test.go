@@ -82,6 +82,40 @@ func TestLoadStack(t *testing.T) {
 	})
 }
 
+func TestLoadModuleDynamicSource(t *testing.T) {
+	// Terraform 1.15 allows a module's source and version to reference const
+	// input variables and local values. These can't be evaluated with an empty
+	// context, so the loader must fall back to the raw expression rather than
+	// reporting an error.
+	module, diags := LoadModule("testdata/module-dynamic-source")
+	if diags.HasErrors() {
+		t.Fatalf("unexpected errors: %v", diags)
+	}
+
+	cases := map[string]struct {
+		source  string
+		version string
+	}{
+		"child":   {source: "var.child_source", version: "1.0.0"},
+		"sibling": {source: "local.sibling_source", version: "local.sibling_version"},
+		"static":  {source: "app.terraform.io/example-org/static/aws", version: "3.0.0"},
+	}
+
+	for name, want := range cases {
+		mc, exists := module.ModuleCalls[name]
+		if !exists {
+			t.Errorf("module call %q not found", name)
+			continue
+		}
+		if mc.Source != want.source {
+			t.Errorf("module %q source = %q, want %q", name, mc.Source, want.source)
+		}
+		if mc.Version != want.version {
+			t.Errorf("module %q version = %q, want %q", name, mc.Version, want.version)
+		}
+	}
+}
+
 func TestProviderLabels(t *testing.T) {
 	// Test that provider blocks with two labels are correctly parsed
 	stack, diags := LoadStack("testdata-stack/provider-labels")

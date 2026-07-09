@@ -1,0 +1,51 @@
+{
+    "path": "testdata/module-dynamic-source",
+
+    "required_providers": {},
+
+    "variables": {
+        "child_source": {
+            "name": "child_source",
+            "type": "string",
+            "default": "app.terraform.io/example-org/child/aws",
+            "required": false,
+            "pos": {
+                "filename": "testdata/module-dynamic-source/module-dynamic-source.tf",
+                "line": 1
+            }
+        }
+    },
+    "outputs": {},
+
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {
+        "child": {
+            "name": "child",
+            "source": "var.child_source",
+            "version": "1.0.0",
+            "pos": {
+                "filename": "testdata/module-dynamic-source/module-dynamic-source.tf",
+                "line": 12
+            }
+        },
+        "sibling": {
+            "name": "sibling",
+            "source": "local.sibling_source",
+            "version": "local.sibling_version",
+            "pos": {
+                "filename": "testdata/module-dynamic-source/module-dynamic-source.tf",
+                "line": 17
+            }
+        },
+        "static": {
+            "name": "static",
+            "source": "app.terraform.io/example-org/static/aws",
+            "version": "3.0.0",
+            "pos": {
+                "filename": "testdata/module-dynamic-source/module-dynamic-source.tf",
+                "line": 22
+            }
+        }
+    }
+}
