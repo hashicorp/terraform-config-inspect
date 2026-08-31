@@ -1,0 +1,45 @@
+{
+    "path": "testdata/provider-dynamic-source",
+
+    "required_providers": {
+        "both": {
+            "source": "var.some_source",
+            "version_constraints": ["var.some_version"]
+        },
+        "only_source": {
+            "source": "\"app.terraform.io/${var.some_source}\""
+        },
+        "only_version": {
+            "source": "bar/baz",
+            "version_constraints": ["var.some_version"]
+        }
+    },
+
+    "variables": {
+        "some_source": {
+            "default": null,
+            "name": "some_source",
+            "type": "string",
+            "required": true,
+            "pos": {
+                "filename": "testdata/provider-dynamic-source/provider-dynamic-source.tf",
+                "line": 17
+            }
+        },
+        "some_version": {
+            "default": null,
+            "name": "some_version",
+            "type": "string",
+            "required": true,
+            "pos": {
+                "filename": "testdata/provider-dynamic-source/provider-dynamic-source.tf",
+                "line": 22
+            }
+        }
+    },
+    "outputs": {},
+
+    "managed_resources": {},
+    "data_resources": {},
+    "module_calls": {}
+}

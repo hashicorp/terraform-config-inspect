@@ -218,7 +218,7 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 			}
 
 		case "required_providers":
-			reqs, reqsDiags := decodeRequiredProvidersBlock(block)
+			reqs, reqsDiags := decodeRequiredProvidersBlock(block, file)
 			diags = append(diags, reqsDiags...)
 			for name, req := range reqs {
 				if _, exists := stack.RequiredProviders[name]; !exists {
@@ -302,7 +302,7 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			for _, innerBlock := range content.Blocks {
 				switch innerBlock.Type {
 				case "required_providers":
-					reqs, reqsDiags := decodeRequiredProvidersBlock(innerBlock)
+					reqs, reqsDiags := decodeRequiredProvidersBlock(innerBlock, file)
 					diags = append(diags, reqsDiags...)
 					for name, req := range reqs {
 						if _, exists := mod.RequiredProviders[name]; !exists {
