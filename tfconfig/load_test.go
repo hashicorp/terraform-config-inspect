@@ -8,7 +8,6 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"slices"
 	"testing"
 
 	"github.com/google/go-cmp/cmp"
@@ -176,8 +175,20 @@ func TestLoadProviderDynamicSource(t *testing.T) {
 		if p.Source != want.source {
 			t.Errorf("provider %q source = %q, want %q", name, p.Source, want.source)
 		}
-		if !slices.Equal(p.VersionConstraints, want.versions) {
+		if !slices_equal(p.VersionConstraints, want.versions) {
 			t.Errorf("provider %q version requirements = %s, want %s", name, p.VersionConstraints, want.versions)
 		}
 	}
+}
+
+func slices_equal(s1, s2 []string) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+	for i := range s1 {
+		if s1[i] != s2[i] {
+			return false
+		}
+	}
+	return true
 }
