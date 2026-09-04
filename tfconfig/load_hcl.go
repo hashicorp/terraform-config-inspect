@@ -218,7 +218,7 @@ func loadStackFromFile(file *hcl.File, stack *Stack) hcl.Diagnostics {
 			}
 
 		case "required_providers":
-			reqs, reqsDiags := decodeRequiredProvidersBlock(block)
+			reqs, reqsDiags := decodeRequiredProvidersBlock(block, file)
 			diags = append(diags, reqsDiags...)
 			for name, req := range reqs {
 				if _, exists := stack.RequiredProviders[name]; !exists {
@@ -302,7 +302,7 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			for _, innerBlock := range content.Blocks {
 				switch innerBlock.Type {
 				case "required_providers":
-					reqs, reqsDiags := decodeRequiredProvidersBlock(innerBlock)
+					reqs, reqsDiags := decodeRequiredProvidersBlock(innerBlock, file)
 					diags = append(diags, reqsDiags...)
 					for name, req := range reqs {
 						if _, exists := mod.RequiredProviders[name]; !exists {
@@ -582,7 +582,9 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			mod.ModuleCalls[name] = mc
 
 			if attr, defined := content.Attributes["source"]; defined {
-				mc.Source = decodeModuleSourceOrVersion(attr, file, &diags)
+				var sourceDiags hcl.Diagnostics
+				mc.Source, sourceDiags = decodeExprWithVars(attr.Expr, file)
+				diags = append(diags, sourceDiags...)
 			}
 
 			if mc.Source == "" {
@@ -590,7 +592,9 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 			}
 
 			if attr, defined := content.Attributes["version"]; defined {
-				mc.Version = decodeModuleSourceOrVersion(attr, file, &diags)
+				var versionDiags hcl.Diagnostics
+				mc.Version, versionDiags = decodeExprWithVars(attr.Expr, file)
+				diags = append(diags, versionDiags...)
 			}
 
 		default:
@@ -603,8 +607,8 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 	return diags
 }
 
-// decodeModuleSourceOrVersion decodes a module call's source or version
-// attribute to a string.
+// decodeExprWithVars decodes a module call's or provider requirement's
+// source or version expression to a string.
 //
 // Terraform 1.15 allows these attributes to reference const input variables and
 // local values (see the module source documentation). Such expressions cannot
@@ -612,14 +616,13 @@ func LoadModuleFromFile(file *hcl.File, mod *Module) hcl.Diagnostics {
 // references variables or locals we record its raw source text rather than
 // reporting an error. Constant expressions are decoded as before so that
 // genuinely wrong-typed values still surface as errors.
-func decodeModuleSourceOrVersion(attr *hcl.Attribute, file *hcl.File, diags *hcl.Diagnostics) string {
-	if len(attr.Expr.Variables()) > 0 {
-		rng := attr.Expr.Range()
-		return string(rng.SliceBytes(file.Bytes))
+func decodeExprWithVars(expr hcl.Expression, file *hcl.File) (string, hcl.Diagnostics) {
+	if len(expr.Variables()) > 0 {
+		rng := expr.Range()
+		return string(rng.SliceBytes(file.Bytes)), nil
 	}
 
 	var value string
-	valDiags := gohcl.DecodeExpression(attr.Expr, nil, &value)
-	*diags = append(*diags, valDiags...)
-	return value
+	valDiags := gohcl.DecodeExpression(expr, nil, &value)
+	return value, valDiags
 }

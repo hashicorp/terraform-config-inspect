@@ -146,3 +146,49 @@ func TestProviderLabels(t *testing.T) {
 		}
 	}
 }
+
+func TestLoadProviderDynamicSource(t *testing.T) {
+	// An upcoming Terraform version allows provider sources and versions to
+	// reference const input variables and local values. These can't be evaluated
+	// with an empty context, so the loader must fall back to the raw expression
+	// rather than reporting an error.
+	module, diags := LoadModule("testdata/provider-dynamic-source")
+	if diags.HasErrors() {
+		t.Fatalf("unexpected errors: %v", diags)
+	}
+
+	cases := map[string]struct {
+		source   string
+		versions []string
+	}{
+		"both":         {source: "var.some_source", versions: []string{"var.some_version"}},
+		"only_source":  {source: "\"app.terraform.io/${var.some_source}\"", versions: []string{}},
+		"only_version": {source: "bar/baz", versions: []string{"var.some_version"}},
+	}
+
+	for name, want := range cases {
+		p, exists := module.RequiredProviders[name]
+		if !exists {
+			t.Errorf("provider requirement %q not found", name)
+			continue
+		}
+		if p.Source != want.source {
+			t.Errorf("provider %q source = %q, want %q", name, p.Source, want.source)
+		}
+		if !slices_equal(p.VersionConstraints, want.versions) {
+			t.Errorf("provider %q version requirements = %s, want %s", name, p.VersionConstraints, want.versions)
+		}
+	}
+}
+
+func slices_equal(s1, s2 []string) bool {
+	if len(s1) != len(s2) {
+		return false
+	}
+	for i := range s1 {
+		if s1[i] != s2[i] {
+			return false
+		}
+	}
+	return true
+}

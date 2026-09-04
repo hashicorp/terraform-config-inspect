@@ -25,7 +25,7 @@ type ProviderRequirement struct {
 	ConfigurationAliases []ProviderRef `json:"aliases,omitempty"`
 }
 
-func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequirement, hcl.Diagnostics) {
+func decodeRequiredProvidersBlock(block *hcl.Block, file *hcl.File) (map[string]*ProviderRequirement, hcl.Diagnostics) {
 	attrs, diags := block.Body.JustAttributes()
 	reqs := make(map[string]*ProviderRequirement)
 	for name, attr := range attrs {
@@ -74,35 +74,19 @@ func decodeRequiredProvidersBlock(block *hcl.Block) (map[string]*ProviderRequire
 
 			switch key.AsString() {
 			case "version":
-				version, valDiags := kv.Value.Value(nil)
-				if valDiags.HasErrors() || !version.Type().Equals(cty.String) {
-					diags = append(diags, &hcl.Diagnostic{
-						Severity: hcl.DiagError,
-						Summary:  "Unsuitable value type",
-						Detail:   "Unsuitable value: string required",
-						Subject:  attr.Expr.Range().Ptr(),
-					})
+				version, versionDiags := decodeExprWithVars(kv.Value, file)
+				if versionDiags.HasErrors() {
+					diags = append(diags, versionDiags...)
 					continue
 				}
-				if !version.IsNull() {
-					pr.VersionConstraints = append(pr.VersionConstraints, version.AsString())
-				}
-
+				pr.VersionConstraints = append(pr.VersionConstraints, version)
 			case "source":
-				source, valDiags := kv.Value.Value(nil)
-				if valDiags.HasErrors() || !source.Type().Equals(cty.String) {
-					diags = append(diags, &hcl.Diagnostic{
-						Severity: hcl.DiagError,
-						Summary:  "Unsuitable value type",
-						Detail:   "Unsuitable value: string required",
-						Subject:  attr.Expr.Range().Ptr(),
-					})
+				source, sourceDiags := decodeExprWithVars(kv.Value, file)
+				if sourceDiags.HasErrors() {
+					diags = append(diags, sourceDiags...)
 					continue
 				}
-
-				if !source.IsNull() {
-					pr.Source = source.AsString()
-				}
+				pr.Source = source
 			case "configuration_aliases":
 				aliases, valDiags := decodeConfigurationAliases(name, kv.Value)
 				if valDiags.HasErrors() {
