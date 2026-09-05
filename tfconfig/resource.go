@@ -4,6 +4,7 @@
 package tfconfig
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -57,6 +58,23 @@ func (m ResourceMode) String() string {
 // MarshalJSON implements encoding/json.Marshaler.
 func (m ResourceMode) MarshalJSON() ([]byte, error) {
 	return []byte(strconv.Quote(m.String())), nil
+}
+
+// UnmarshalJSON implements encoding/json.Unmarshaler.
+func (m *ResourceMode) UnmarshalJSON(b []byte) error {
+	var s string
+	if err := json.Unmarshal(b, &s); err != nil {
+		return err
+	}
+	switch s {
+	case "managed":
+		*m = ManagedResourceMode
+	case "data":
+		*m = DataResourceMode
+	default:
+		*m = InvalidResourceMode
+	}
+	return nil
 }
 
 func resourceTypeDefaultProviderName(typeName string) string {
